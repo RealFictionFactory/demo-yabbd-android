@@ -44,4 +44,8 @@ class BoingBallAudioImpl(
             1f,
         )
     }
+
+    override fun release() {
+        soundPool.release()
+    }
 }

@@ -10,6 +10,9 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -24,6 +27,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import com.rff.boingballdemo.ui.theme.BoingBallDemoTheme
 import com.rff.boingballdemo.utils.Point3D
 import com.rff.boingballdemo.ui.theme.redColor
 import com.rff.boingballdemo.ui.theme.whiteColor
@@ -189,4 +195,14 @@ private fun DrawScope.boingBall(
             drawPath(f.path, color = f.color)
             drawPath(f.path, color = Color.Black, style = Stroke(width = 0.8f))
         }
+}
+
+@Preview
+@Composable
+private fun BoingBallPreview() {
+    BoingBallDemoTheme {
+        Box(modifier = Modifier.size(300.dp)) {
+            BoingBall(modifier = Modifier.fillMaxSize())
+        }
+    }
 }

@@ -4,4 +4,5 @@ interface BoingBallAudio {
     fun play()
     fun playLeft()
     fun playRight()
+    fun release()
 }
