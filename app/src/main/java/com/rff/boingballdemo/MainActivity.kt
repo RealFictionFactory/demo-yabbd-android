@@ -14,7 +14,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             BoingBallDemoTheme {
-                BoingBallScreenRoot()
+                BoingBallScreen()
             }
         }
     }
@@ -24,7 +24,7 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun BoingBallScreenPreview() {
     BoingBallDemoTheme {
-        BoingBallScreenRoot()
+        BoingBallScreen()
     }
 }
 
@@ -32,6 +32,6 @@ private fun BoingBallScreenPreview() {
 @Composable
 private fun BoingBallScreenLandscapePreview() {
     BoingBallDemoTheme {
-        BoingBallScreenRoot()
+        BoingBallScreen()
     }
 }
