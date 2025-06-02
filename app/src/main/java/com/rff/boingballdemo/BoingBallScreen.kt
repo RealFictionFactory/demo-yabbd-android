@@ -9,7 +9,7 @@ import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.systemBars
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,9 +25,9 @@ import com.rff.boingballdemo.ui.theme.backgroundColor
 fun BoingBallScreen() {
     Box(
         modifier = Modifier
-            .windowInsetsPadding(WindowInsets.systemBars)
+            .fillMaxSize()
             .background(color = backgroundColor)
-            .fillMaxSize(),
+            .windowInsetsPadding(WindowInsets.safeDrawing),
         contentAlignment = Alignment.Center
     ) {
         Column(
