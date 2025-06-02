@@ -1,6 +1,5 @@
 package com.rff.boingballdemo.component
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -24,19 +23,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.rff.boingballdemo.ui.theme.amigaOs13Blue
 
 @Composable
 fun AmigaToolbar(
     title: String,
     modifier: Modifier = Modifier,
     toolbarHeight: Dp = 28.dp,
-    bgColor: Color = Color(0xFFC0C0C0),
-    lightEdge: Color = Color.White,
-    darkEdge: Color = Color(0xFF404040)
 ) {
-    // 1px in canvas coordinates
-    val strokePx = with(LocalDensity.current) { 2.dp.toPx() }
-
     Box(
         modifier
             .height(toolbarHeight)
@@ -47,21 +41,19 @@ fun AmigaToolbar(
             }
     ) {
         Row(
-            Modifier
-                .fillMaxSize(),
+            Modifier.fillMaxSize(),
             verticalAlignment = Alignment.CenterVertically
         ) {
+            Spacer(Modifier.width(4.dp))
             // Close gadget
-            CloseGadget(
-                modifier = Modifier.size(28.dp),
-            )
+            CloseGadget()
             Spacer(Modifier.width(4.dp))
             // Title
             Text(
                 text = title,
                 fontSize = 16.sp,
-                color = Color.Black,
-                fontFamily = FontFamily.Monospace
+                color = amigaOs13Blue,
+                fontFamily = FontFamily.Monospace,
             )
             Spacer(Modifier.width(4.dp))
             // Depth gadget
@@ -70,56 +62,12 @@ fun AmigaToolbar(
                     .weight(1f)
                     .fillMaxHeight()
             )
+            // Bring to front gadget
+            BringToFrontGadget()
+            // Bring to back gadget
+            SendToBackGadget()
+            Spacer(Modifier.width(4.dp))
         }
-    }
-}
-
-@Composable
-private fun CloseGadget(
-    modifier: Modifier = Modifier,
-) {
-    val strokePx = with(LocalDensity.current) { 2.dp.toPx() }
-    val baseGadgetSize = with(LocalDensity.current) { 10.dp.toPx() }
-
-    Box(
-        modifier = modifier
-            .drawBehind {
-                var rectSize: Float
-                val baseSize = (size.width * strokePx / baseGadgetSize)
-                // background
-                drawRect(Color.White)
-                rectSize = 4 * baseSize
-                drawRect(
-                    color = Color.Black,
-                    topLeft = Offset((size.width - rectSize) / 2, (size.height - rectSize) / 2),
-                    size = Size(rectSize, rectSize)
-                )
-                rectSize = 3 * baseSize
-                drawRect(
-                    color = Color.White,
-                    topLeft = Offset((size.width - rectSize) / 2, (size.height - rectSize) / 2),
-                    size = Size(rectSize, rectSize)
-                )
-                rectSize = baseSize
-                drawRect(
-                    color = Color.Black,
-                    topLeft = Offset((size.width - rectSize) / 2, (size.height - rectSize) / 2),
-                    size = Size(rectSize, rectSize)
-                )
-            }
-    )
-}
-
-@Preview
-@Composable
-private fun CloseGadgetPreview() {
-    Box(
-        modifier = Modifier.size(50.dp),
-        contentAlignment = Alignment.Center,
-    ) {
-        CloseGadget(
-            modifier = Modifier.size(32.dp)
-        )
     }
 }
 
@@ -136,12 +84,12 @@ fun EmptyToolbar(
                 drawRect(color = Color.White)
                 val baseSize = (size.minDimension * strokePx / baseGadgetSize)
                 drawRect(
-                    color = Color.Black,
+                    color = amigaOs13Blue,
                     topLeft = Offset(baseSize, size.height - 2 * baseSize),
                     size = Size(size.width - 2 * baseSize, baseSize)
                 )
                 drawRect(
-                    color = Color.Black,
+                    color = amigaOs13Blue,
                     topLeft = Offset(baseSize, size.height - 4 * baseSize),
                     size = Size(size.width - 2 * baseSize, baseSize)
                 )
