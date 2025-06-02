@@ -6,7 +6,7 @@ Back to the days when real computers first emerged, and users genuinely reveled 
 
 The project features two core Compose components: one responsible for rendering and animating the Boing Ball on a canvas (BoingBall.kt), and another dedicated solely to drawing the background (BoingBallBackground.kt).
 
-*(Boing Ball part is developed with AI's help – I'll admit, 3D spatial mathematics isn't exactly my forte!)*
+*(For the Boing Ball component, I leaned on AI a bit – honestly, 3D math isn't really my strong point!)*
 
 - Amiga and Boing Ball are trademarks of Amiga Inc.
 
