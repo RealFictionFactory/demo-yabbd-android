@@ -2,7 +2,6 @@ package com.rff.boingballdemo.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
@@ -12,6 +11,7 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.rff.boingballdemo.ui.theme.amigaOs13Blue
@@ -28,7 +28,7 @@ internal fun CloseGadget(
         modifier = modifier
             .aspectRatio(12f/10f)
             .drawBehind {
-                val pixelSize = size.width / 12
+                val pixelSize = size.height / 10
                 val x0 = 0f.correct(pixelSize)
                 val x1 = size.width.correct(-pixelSize)
                 drawLine(
@@ -86,7 +86,7 @@ internal fun BringToFrontGadget(
         modifier = modifier
             .aspectRatio(12f/10f)
             .drawBehind {
-                val pixelSize = size.width / 12
+                val pixelSize = size.height / 10
                 val x0 = 0f.correct(pixelSize)
                 drawLine(
                     color = amigaOs13Blue,
@@ -135,13 +135,11 @@ internal fun SendToBackGadget(
     // two additional blue lines at the left and right edges
     Box(
         modifier = modifier
-            .aspectRatio(14f/10f)
+            .aspectRatio(13f / 10f)
             .drawBehind {
-                val pixelSize = size.width / 14
+                val pixelSize = size.height / 10
                 val x0 = 0f.correct(pixelSize)
-                val y0 = 0f.correct(pixelSize)
                 val x1 = size.width.correct(-pixelSize)
-                val y1 = size.height.correct(-pixelSize)
                 drawLine(
                     color = amigaOs13Blue,
                     start = Offset(x0, 0f),
@@ -157,31 +155,57 @@ internal fun SendToBackGadget(
                 drawRect(
                     color = Color.White,
                     topLeft = Offset(x = (x0 + pixelSize).correct(-pixelSize), y = 0f),
-                    size = Size(12 * pixelSize, 10 * pixelSize),
+                    size = Size(11 * pixelSize, 10 * pixelSize),
                 )
                 drawRect(
                     color = Color.Black,
                     topLeft = Offset(
-                        x = (x0 + 2*pixelSize).correct(-pixelSize),
-                        y = (0f + 2*pixelSize).correct(-2*pixelSize)
+                        x = (x0 + 2 * pixelSize).correct(-pixelSize),
+                        y = (0f + 2 * pixelSize).correct(-2 * pixelSize)
                     ),
-                    size = Size(8 * pixelSize, 6 * pixelSize),
+                    size = Size(7 * pixelSize, 6 * pixelSize),
                 )
                 drawRect(
                     color = amigaOs13Blue,
                     topLeft = Offset(
-                        x = (x0 + 4*pixelSize).correct(-pixelSize),
-                        y = (0f + 3*pixelSize).correct(-2*pixelSize)
+                        x = (x0 + 4 * pixelSize).correct(-pixelSize),
+                        y = (0f + 3 * pixelSize).correct(-2 * pixelSize)
                     ),
-                    size = Size(8 * pixelSize, 7 * pixelSize),
+                    size = Size(7 * pixelSize, 7 * pixelSize),
                 )
                 drawRect(
                     color = Color.White,
                     topLeft = Offset(
-                        x = (x0 + 5*pixelSize).correct(-pixelSize),
-                        y = (0f + 4*pixelSize).correct(-2*pixelSize)
+                        x = (x0 + 5 * pixelSize).correct(-pixelSize),
+                        y = (0f + 4 * pixelSize).correct(-2 * pixelSize)
                     ),
-                    size = Size(6 * pixelSize, 5 * pixelSize),
+                    size = Size(5 * pixelSize, 5 * pixelSize),
+                )
+            }
+    )
+}
+
+@Composable
+fun ToolbarPlaceholderGadget(
+    modifier: Modifier = Modifier
+) {
+    val strokePx = with(LocalDensity.current) { 2.dp.toPx() }
+    val baseGadgetSize = with(LocalDensity.current) { 10.dp.toPx() }
+
+    Box(
+        modifier = modifier
+            .drawBehind {
+                drawRect(color = Color.White)
+                val baseSize = (size.minDimension * strokePx / baseGadgetSize)
+                drawRect(
+                    color = amigaOs13Blue,
+                    topLeft = Offset(baseSize, size.height - 2 * baseSize),
+                    size = Size(size.width - 2 * baseSize, baseSize)
+                )
+                drawRect(
+                    color = amigaOs13Blue,
+                    topLeft = Offset(baseSize, size.height - 4 * baseSize),
+                    size = Size(size.width - 2 * baseSize, baseSize)
                 )
             }
     )
@@ -196,8 +220,7 @@ private fun CloseGadgetPreview() {
     ) {
         CloseGadget(
             modifier = Modifier
-                .width((3*12).dp)
-                .height((3*10).dp)
+                .width((3 * 12).dp)
         )
     }
 }
@@ -211,8 +234,7 @@ private fun BringToFrontGadgetPreview() {
     ) {
         BringToFrontGadget(
             modifier = Modifier
-                .width((3*12).dp)
-                .height((3*10).dp)
+                .width((3 * 12).dp)
         )
     }
 }
@@ -226,8 +248,20 @@ private fun SendToBackGadgetPreview() {
     ) {
         SendToBackGadget(
             modifier = Modifier
-                .width((3*13).dp)
-                .height((3*10).dp)
+                .width((3 * 13).dp)
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun ToolbarPlaceholderGadgetPreview() {
+    Box(
+        modifier = Modifier.size(250.dp, 50.dp),
+        contentAlignment = Alignment.Center,
+    ) {
+        ToolbarPlaceholderGadget(
+            modifier = Modifier.size(64.dp, 32.dp)
         )
     }
 }
