@@ -2,6 +2,8 @@ package com.rff.boingballdemo.component
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
@@ -11,7 +13,6 @@ import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.rff.boingballdemo.ui.theme.amigaOs13Blue
@@ -189,23 +190,22 @@ internal fun SendToBackGadget(
 fun ToolbarPlaceholderGadget(
     modifier: Modifier = Modifier
 ) {
-    val strokePx = with(LocalDensity.current) { 2.dp.toPx() }
-    val baseGadgetSize = with(LocalDensity.current) { 10.dp.toPx() }
-
     Box(
         modifier = modifier
             .drawBehind {
+                val pixelSize = 2 * (size.height / 10)
+                val barLength = size.width - 2 * pixelSize
+
                 drawRect(color = Color.White)
-                val baseSize = (size.minDimension * strokePx / baseGadgetSize)
                 drawRect(
                     color = amigaOs13Blue,
-                    topLeft = Offset(baseSize, size.height - 2 * baseSize),
-                    size = Size(size.width - 2 * baseSize, baseSize)
+                    topLeft = Offset(pixelSize, size.height - 2 * pixelSize),
+                    size = Size(barLength, pixelSize)
                 )
                 drawRect(
                     color = amigaOs13Blue,
-                    topLeft = Offset(baseSize, size.height - 4 * baseSize),
-                    size = Size(size.width - 2 * baseSize, baseSize)
+                    topLeft = Offset(pixelSize, size.height - 4 * pixelSize),
+                    size = Size(barLength, pixelSize)
                 )
             }
     )
@@ -261,7 +261,9 @@ private fun ToolbarPlaceholderGadgetPreview() {
         contentAlignment = Alignment.Center,
     ) {
         ToolbarPlaceholderGadget(
-            modifier = Modifier.size(64.dp, 32.dp)
+            modifier = Modifier
+                .height((3 * 10).dp)
+                .fillMaxSize()
         )
     }
 }
