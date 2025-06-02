@@ -80,6 +80,7 @@ fun BoingBall(
                 targetValue = 1f,
                 animationSpec = tween(500, easing = FastOutLinearInEasing)
             )
+            boing.play()
             // rise more slowly
             vBounce.animateTo(
                 targetValue = 0f,
