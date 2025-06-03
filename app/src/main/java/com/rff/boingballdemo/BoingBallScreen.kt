@@ -22,14 +22,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.rff.boingballdemo.component.AmigaToolbar
 import com.rff.boingballdemo.component.BoingBallView
+import com.rff.boingballdemo.ui.theme.BoingBallDemoTheme
 import com.rff.boingballdemo.ui.theme.TopazFont
 import com.rff.boingballdemo.ui.theme.backgroundColor
 
 @Composable
-fun BoingBallScreen() {
+fun BoingBallScreen(
+    onPreferencesClick: () -> Unit = {},
+) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -62,7 +66,7 @@ fun BoingBallScreen() {
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(top = 40.dp, end = 40.dp)
-                .clickable { println("jebudu!!!!") },
+                .clickable { onPreferencesClick() },
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
@@ -70,12 +74,28 @@ fun BoingBallScreen() {
                     .width(120.dp)
                     .height(40.dp),
                 painter = painterResource(R.drawable.preferences),
-                contentDescription = "preferences"
+                contentDescription = stringResource(R.string.preferences)
             )
             Text(
-                text = "Preferences",
+                text = stringResource(R.string.preferences),
                 fontFamily = TopazFont
             )
         }
+    }
+}
+
+@Preview
+@Composable
+private fun BoingBallScreenPreview() {
+    BoingBallDemoTheme {
+        BoingBallScreen()
+    }
+}
+
+@Preview(device = "spec:parent=pixel_5,orientation=landscape")
+@Composable
+private fun BoingBallScreenLandscapePreview() {
+    BoingBallDemoTheme {
+        BoingBallScreen()
     }
 }
