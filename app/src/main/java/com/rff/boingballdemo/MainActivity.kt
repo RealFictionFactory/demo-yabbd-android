@@ -4,8 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.rememberNavController
 import com.rff.boingballdemo.ui.theme.BoingBallDemoTheme
 
 class MainActivity : ComponentActivity() {
@@ -14,24 +13,11 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             BoingBallDemoTheme {
-                BoingBallScreenRoot()
+                val navController = rememberNavController()
+                Navigation(
+                    navController = navController
+                )
             }
         }
-    }
-}
-
-@Preview
-@Composable
-private fun BoingBallScreenPreview() {
-    BoingBallDemoTheme {
-        BoingBallScreenRoot()
-    }
-}
-
-@Preview(device = "spec:parent=pixel_5,orientation=landscape")
-@Composable
-private fun BoingBallScreenLandscapePreview() {
-    BoingBallDemoTheme {
-        BoingBallScreenRoot()
     }
 }
