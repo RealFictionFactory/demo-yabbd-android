@@ -20,21 +20,26 @@ val Typography = Typography(
         fontSize = 16.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
-    )
-    /* Other default text styles to override
-    titleLarge = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
-        fontSize = 22.sp,
-        lineHeight = 28.sp,
-        letterSpacing = 0.sp
     ),
-    labelSmall = TextStyle(
-        fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Medium,
-        fontSize = 11.sp,
+    bodyMedium = TextStyle(
+        fontFamily = TopazFont,
+        fontWeight = FontWeight.Normal,
+        fontSize = 14.sp,
+        lineHeight = 20.sp,
+        letterSpacing = 0.3.sp
+    ),
+    bodySmall = TextStyle(
+        fontFamily = TopazFont,
+        fontWeight = FontWeight.Normal,
+        fontSize = 12.sp,
         lineHeight = 16.sp,
-        letterSpacing = 0.5.sp
-    )
-    */
+        letterSpacing = 0.1.sp
+    ),
+    labelLarge = TextStyle(
+        fontFamily = TopazFont, // Or any other font you prefer for buttons
+        fontWeight = FontWeight.Medium, // Buttons often use a slightly bolder font
+        fontSize = 14.sp, // Adjust to your design needs
+        lineHeight = 20.sp,
+        letterSpacing = 0.1.sp // Adjust letter spacing as needed
+    ),
 )

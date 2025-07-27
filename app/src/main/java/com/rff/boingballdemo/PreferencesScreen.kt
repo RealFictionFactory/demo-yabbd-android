@@ -8,6 +8,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.material3.Button
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -16,11 +18,17 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.rff.boingballdemo.component.AmigaToolbar
+import com.rff.boingballdemo.component.ColorPicker
 import com.rff.boingballdemo.ui.theme.BoingBallDemoTheme
 import com.rff.boingballdemo.ui.theme.backgroundColor
 
 /**
  * possible settings to change:
+ * ASAP:
+ * - Boing Ball colors (main [red, blue, green] and alternate [white, other?])
+ * - Draw Boing Ball square frames (true/false)
+ * IN FUTURE:
+ * - Boing Ball segments number
  * - OS 1.3 / 2.0+ - changes toolbar and font
  */
 
@@ -47,7 +55,11 @@ fun PreferencesScreen() {
                     .fillMaxSize()
                     .background(color = backgroundColor)
             ) {
-
+                Text(text = "Pick main BB color")
+                ColorPicker()
+                Button(onClick = {}) {
+                    Text(text = "Bring BB original look")
+                }
             }
         }
     }
