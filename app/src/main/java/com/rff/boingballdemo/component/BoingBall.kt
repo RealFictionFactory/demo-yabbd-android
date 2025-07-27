@@ -132,6 +132,9 @@ private fun DrawScope.boingBall(
     radius: Float,
     rotationAngle: Float,
     earthTiltAngle: Float,
+    ballThemeColor: Color = redColor,
+    ballAltColor: Color = whiteColor,
+    drawFrames: Boolean = true,
 ) {
     val columns = BOING_BALL_COLUMNS
     val rows = BOING_BALL_ROWS
@@ -183,7 +186,7 @@ private fun DrawScope.boingBall(
                 close()
             }
 
-            val col = if (((row + column) and 1) == 0) redColor else whiteColor
+            val col = if (((row + column) and 1) == 0) ballThemeColor else ballAltColor
             val depth = (v1.z + v2.z + v3.z + v4.z) * 0.25f
             faces += Face(path, depth, col)
         }
@@ -193,7 +196,9 @@ private fun DrawScope.boingBall(
     faces.sortedBy { it.depth }
         .forEach { f ->
             drawPath(f.path, color = f.color)
-            drawPath(f.path, color = Color.Black, style = Stroke(width = 0.8f))
+            if (drawFrames) {
+                drawPath(f.path, color = Color.Black, style = Stroke(width = 0.8f))
+            }
         }
 }
 
