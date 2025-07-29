@@ -1,6 +1,7 @@
 package com.rff.boingballdemo.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,16 +19,31 @@ import com.rff.boingballdemo.ui.theme.greenColor
 import com.rff.boingballdemo.ui.theme.redColor
 
 @Composable
-fun ColorPicker() {
+fun AmigaOs13ColorPicker(
+    onColorSelected: (Color) -> Unit = {},
+) {
     Row(
         modifier = Modifier
             .background(color = Color.White)
             .padding(1.dp)
     ) {
-        ColorField(color = redColor)
-        ColorField(color = blueColor, isSelected = true)
-        ColorField(color = greenColor)
-        ColorField(color = Color.Black)
+        ColorField(
+            color = redColor,
+            onClick = { onColorSelected(redColor) }
+        )
+        ColorField(
+            color = blueColor,
+            isSelected = true,
+            onClick = { onColorSelected(blueColor) }
+        )
+        ColorField(
+            color = greenColor,
+            onClick = { onColorSelected(redColor) }
+        )
+        ColorField(
+            color = Color.Black,
+            onClick = { onColorSelected(Color.Black) }
+        )
     }
 }
 
@@ -35,6 +51,7 @@ fun ColorPicker() {
 private fun ColorField(
     color: Color,
     isSelected: Boolean = false,
+    onClick: () -> Unit = {},
 ) {
     Box(
         modifier = Modifier
@@ -42,6 +59,7 @@ private fun ColorField(
             .height(50.dp)
             .background(color = Color.Blue)
             .padding(1.dp)
+            .clickable { onClick() }
     ) {
         Box(
             modifier = Modifier
@@ -57,6 +75,6 @@ private fun ColorField(
 @Composable
 private fun ColorPickerPreview() {
     BoingBallDemoTheme {
-        ColorPicker()
+        AmigaOs13ColorPicker()
     }
 }

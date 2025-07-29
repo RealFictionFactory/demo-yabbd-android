@@ -1,6 +1,7 @@
 package com.rff.boingballdemo.ui.theme
 
 import androidx.compose.material3.Typography
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -18,6 +19,7 @@ val Typography = Typography(
         fontFamily = TopazFont,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp,
+        color = Color.White,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
@@ -25,6 +27,7 @@ val Typography = Typography(
         fontFamily = TopazFont,
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
+        color = Color.White,
         lineHeight = 20.sp,
         letterSpacing = 0.3.sp
     ),
@@ -32,14 +35,16 @@ val Typography = Typography(
         fontFamily = TopazFont,
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
+        color = Color.White,
         lineHeight = 16.sp,
         letterSpacing = 0.1.sp
     ),
     labelLarge = TextStyle(
-        fontFamily = TopazFont, // Or any other font you prefer for buttons
-        fontWeight = FontWeight.Medium, // Buttons often use a slightly bolder font
-        fontSize = 14.sp, // Adjust to your design needs
+        fontFamily = TopazFont,
+        fontWeight = FontWeight.Medium,
+        fontSize = 14.sp,
+        color = Color.White,
         lineHeight = 20.sp,
-        letterSpacing = 0.1.sp // Adjust letter spacing as needed
+        letterSpacing = 0.1.sp
     ),
 )
