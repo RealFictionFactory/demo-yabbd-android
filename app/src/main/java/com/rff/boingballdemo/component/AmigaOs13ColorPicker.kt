@@ -14,36 +14,36 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.rff.boingballdemo.ui.theme.BoingBallDemoTheme
+import com.rff.boingballdemo.ui.theme.amigaOs13Blue
 import com.rff.boingballdemo.ui.theme.blueColor
 import com.rff.boingballdemo.ui.theme.greenColor
 import com.rff.boingballdemo.ui.theme.redColor
 
+val DefaultAmigaOs13PickerColors = listOf(
+    redColor,
+    amigaOs13Blue,
+    greenColor,
+    Color.Black
+)
+
 @Composable
 fun AmigaOs13ColorPicker(
-    onColorSelected: (Color) -> Unit = {},
+    selectedIndex: Int = 0,
+    onColorSelected: (Int) -> Unit = { _-> },
+    colors: List<Color> = DefaultAmigaOs13PickerColors,
 ) {
     Row(
         modifier = Modifier
             .background(color = Color.White)
             .padding(1.dp)
     ) {
-        ColorField(
-            color = redColor,
-            onClick = { onColorSelected(redColor) }
-        )
-        ColorField(
-            color = blueColor,
-            isSelected = true,
-            onClick = { onColorSelected(blueColor) }
-        )
-        ColorField(
-            color = greenColor,
-            onClick = { onColorSelected(redColor) }
-        )
-        ColorField(
-            color = Color.Black,
-            onClick = { onColorSelected(Color.Black) }
-        )
+        colors.forEachIndexed { index, color ->
+            ColorField(
+                color = color,
+                isSelected = selectedIndex == index,
+                onClick = { onColorSelected(index) }
+            )
+        }
     }
 }
 
@@ -57,14 +57,14 @@ private fun ColorField(
         modifier = Modifier
             .width(40.dp)
             .height(50.dp)
-            .background(color = Color.Blue)
-            .padding(1.dp)
             .clickable { onClick() }
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = Color.White)
+                .background(color = if (isSelected) Color.White else amigaOs13Blue)
+                .padding(1.dp)
+                .background(color = amigaOs13Blue)
                 .padding(if (isSelected) 1.dp else 0.dp)
                 .background(color = color)
         )

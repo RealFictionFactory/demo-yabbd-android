@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -28,6 +29,7 @@ import com.rff.boingballdemo.component.AmigaOs13Button
 import com.rff.boingballdemo.component.AmigaToolbar
 import com.rff.boingballdemo.component.AmigaOs13CheckBox
 import com.rff.boingballdemo.component.AmigaOs13ColorPicker
+import com.rff.boingballdemo.component.DefaultAmigaOs13PickerColors
 import com.rff.boingballdemo.ui.theme.BoingBallDemoTheme
 import com.rff.boingballdemo.ui.theme.amigaOs13Blue
 import com.rff.boingballdemo.ui.theme.backgroundColor
@@ -45,6 +47,8 @@ import com.rff.boingballdemo.ui.theme.backgroundColor
 @Composable
 fun PreferencesScreen() {
     var drawFrameCheckState by remember { mutableStateOf(false) }
+    var mainColorIndex by remember { mutableIntStateOf(0) }
+    var alternateColorIndex by remember { mutableIntStateOf(3) }
 
     Box(
         modifier = Modifier
@@ -69,10 +73,21 @@ fun PreferencesScreen() {
                     .padding(16.dp)
             ) {
                 Text(text = "Pick main BB color")
-                AmigaOs13ColorPicker()
+                AmigaOs13ColorPicker(
+                    selectedIndex = mainColorIndex,
+                    onColorSelected = { index ->
+                        mainColorIndex = index
+                    }
+                )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(text = "Pick alternate BB color")
-                AmigaOs13ColorPicker()
+                AmigaOs13ColorPicker(
+                    selectedIndex = alternateColorIndex,
+                    colors = DefaultAmigaOs13PickerColors.subList(0, 3).plus(Color.White),
+                    onColorSelected = { index ->
+                        alternateColorIndex = index
+                    }
+                )
                 Spacer(modifier = Modifier.height(8.dp))
                 Row(
                     modifier = Modifier.padding(vertical = 8.dp),
@@ -90,6 +105,11 @@ fun PreferencesScreen() {
                 Spacer(modifier = Modifier.height(8.dp))
                 AmigaOs13Button(
                     text = "Bring BB defaults",
+                    onClick = {}
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+                AmigaOs13Button(
+                    text = "Save settings",
                     onClick = {}
                 )
             }

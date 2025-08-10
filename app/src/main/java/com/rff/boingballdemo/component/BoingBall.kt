@@ -14,11 +14,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
@@ -27,8 +29,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import com.rff.boingballdemo.ui.theme.BoingBallDemoTheme
 import com.rff.boingballdemo.utils.Point3D
 import com.rff.boingballdemo.ui.theme.redColor
@@ -63,7 +68,34 @@ fun BoingBall(
             repeatMode = RepeatMode.Reverse
         )
     ).value
+
+    // Get the current lifecycle owner
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    // State to track if the app is currently resumed
+    var isResumed by remember { mutableStateOf(lifecycleOwner.lifecycle.currentState.isAtLeast(
+        Lifecycle.State.RESUMED)) }
+
+    // Use DisposableEffect for lifecycle observation
+    // This ensures the observer is removed when the composable leaves the composition
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                isResumed = true
+            } else if (event == Lifecycle.Event.ON_PAUSE) {
+                isResumed = false
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
     LaunchedEffect(Unit) {
+        if (!isResumed) return@LaunchedEffect
+
         while (true) {
             if (direction)
                 angle += ROTATION_SPEED // radians per frame
@@ -72,7 +104,12 @@ fun BoingBall(
             withFrameNanos { /* keep looping */ }
         }
     }
-    LaunchedEffect(Unit) {
+
+    val currentBoing by rememberUpdatedState(boing)
+
+    LaunchedEffect(isResumed) {
+        if (!isResumed) return@LaunchedEffect
+
         while (true) {
             angle += 0.005f // radians per frame
             // fall quickly
@@ -80,7 +117,7 @@ fun BoingBall(
                 targetValue = 1f,
                 animationSpec = tween(500, easing = FastOutLinearInEasing)
             )
-            boing.play()
+            currentBoing.play()
             // rise more slowly
             vBounce.animateTo(
                 targetValue = 0f,
@@ -88,11 +125,19 @@ fun BoingBall(
             )
         }
     }
-    LaunchedEffect(direction) {
+
+    LaunchedEffect(direction, isResumed) {
+        if (!isResumed) return@LaunchedEffect
+
         if (direction)
-            boing.playRight()
+            currentBoing.playRight()
         else
-            boing.playLeft()
+            currentBoing.playLeft()
+    }
+
+    LaunchedEffect(hBounce) {
+        direction = hBouncePrev > hBounce
+        hBouncePrev = hBounce
     }
 
     Canvas(modifier = modifier) {
@@ -104,8 +149,6 @@ fun BoingBall(
 
         val maxX = size.width - radius
         val cx = radius + (maxX - radius) * hBounce
-        direction = hBouncePrev > hBounce
-        hBouncePrev = hBounce
         val tz = tilt.toRadians()
 
         drawCircle(
