@@ -1,4 +1,4 @@
-package com.rff.boingballdemo
+package com.rff.boingballdemo.preferences
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -25,6 +25,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.rff.boingballdemo.R
 import com.rff.boingballdemo.component.AmigaOs13Button
 import com.rff.boingballdemo.component.AmigaToolbar
 import com.rff.boingballdemo.component.AmigaOs13CheckBox
@@ -45,10 +47,26 @@ import com.rff.boingballdemo.ui.theme.backgroundColor
  */
 
 @Composable
-fun PreferencesScreen() {
-    var drawFrameCheckState by remember { mutableStateOf(false) }
+fun PreferencesScreenRoot(
+    viewModel: PreferencesViewModel = PreferencesViewModel()
+) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+    PreferencesScreen(
+        state = state,
+        onAction = { action ->
+            viewModel.onAction(action)
+        }
+    )
+}
+
+@Composable
+fun PreferencesScreen(
+    state: PreferencesState,
+    onAction: (PreferencesAction) -> Unit,
+) {
     var mainColorIndex by remember { mutableIntStateOf(0) }
     var alternateColorIndex by remember { mutableIntStateOf(3) }
+    val altColors = DefaultAmigaOs13PickerColors.subList(0, 3).plus(Color.White)
 
     Box(
         modifier = Modifier
@@ -77,15 +95,17 @@ fun PreferencesScreen() {
                     selectedIndex = mainColorIndex,
                     onColorSelected = { index ->
                         mainColorIndex = index
+                        onAction(PreferencesAction.ChangeThemeColor(DefaultAmigaOs13PickerColors[index]))
                     }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(text = "Pick alternate BB color")
                 AmigaOs13ColorPicker(
                     selectedIndex = alternateColorIndex,
-                    colors = DefaultAmigaOs13PickerColors.subList(0, 3).plus(Color.White),
+                    colors = altColors,
                     onColorSelected = { index ->
                         alternateColorIndex = index
+                        onAction(PreferencesAction.ChangeAltColor(altColors[index]))
                     }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
@@ -96,21 +116,21 @@ fun PreferencesScreen() {
                     Text(text = "Draw BB square frames")
                     Spacer(modifier = Modifier.width(8.dp))
                     AmigaOs13CheckBox(
-                        isChecked = drawFrameCheckState,
+                        isChecked = state.drawFrames,
                         onCheckChanged = { newState ->
-                            drawFrameCheckState = newState
+                            onAction(PreferencesAction.ChangeFrameDraw(newState))
                         }
                     )
                 }
                 Spacer(modifier = Modifier.height(8.dp))
                 AmigaOs13Button(
                     text = "Bring BB defaults",
-                    onClick = {}
+                    onClick = { onAction(PreferencesAction.BringDefaults) }
                 )
                 Spacer(modifier = Modifier.height(24.dp))
                 AmigaOs13Button(
                     text = "Save settings",
-                    onClick = {}
+                    onClick = { onAction(PreferencesAction.SaveSettings) }
                 )
             }
         }
@@ -121,6 +141,9 @@ fun PreferencesScreen() {
 @Composable
 private fun PreferencesScreenPreview() {
     BoingBallDemoTheme {
-        PreferencesScreen()
+        PreferencesScreen(
+            state = PreferencesState(),
+            onAction = {}
+        )
     }
 }

@@ -29,11 +29,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.rff.boingballdemo.ui.theme.BoingBallDemoTheme
 import com.rff.boingballdemo.utils.Point3D
 import com.rff.boingballdemo.ui.theme.redColor
@@ -97,14 +97,17 @@ fun BoingBall(
         if (!isResumed) return@LaunchedEffect
 
         while (true) {
-            if (direction)
+            if (direction) {
                 angle += ROTATION_SPEED // radians per frame
-            else
+            } else {
                 angle -= ROTATION_SPEED // radians per frame
+            }
+
             withFrameNanos { /* keep looping */ }
         }
     }
 
+    // in my case it is unnecessary because "boing" reference does not change
     val currentBoing by rememberUpdatedState(boing)
 
     LaunchedEffect(isResumed) {
@@ -223,9 +226,15 @@ private fun DrawScope.boingBall(
 
             val path = Path().apply {
                 moveTo(p1.x, p1.y)
-                if (p1 != p2) lineTo(p2.x, p2.y)
+
+                if (p1 != p2)
+                    lineTo(p2.x, p2.y)
+
                 lineTo(p3.x, p3.y)
-                if (p3 != p4) lineTo(p4.x, p4.y)
+
+                if (p3 != p4)
+                    lineTo(p4.x, p4.y)
+
                 close()
             }
 
@@ -239,6 +248,7 @@ private fun DrawScope.boingBall(
     faces.sortedBy { it.depth }
         .forEach { f ->
             drawPath(f.path, color = f.color)
+
             if (drawFrames) {
                 drawPath(f.path, color = Color.Black, style = Stroke(width = 0.8f))
             }

@@ -6,6 +6,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.rff.boingballdemo.preferences.PreferencesScreen
+import com.rff.boingballdemo.preferences.PreferencesScreenRoot
 import kotlinx.serialization.Serializable
 
 sealed interface Graph
@@ -41,7 +43,7 @@ fun NavGraphBuilder.mainGraph(navController: NavHostController) {
             )
         }
         composable<MainGraph.Preferences> {
-            PreferencesScreen()
+            PreferencesScreenRoot()
         }
     }
 }
