@@ -35,6 +35,7 @@ import com.rff.boingballdemo.component.DefaultAmigaOs13PickerColors
 import com.rff.boingballdemo.ui.theme.BoingBallDemoTheme
 import com.rff.boingballdemo.ui.theme.amigaOs13Blue
 import com.rff.boingballdemo.ui.theme.backgroundColor
+import org.koin.compose.viewmodel.koinViewModel
 
 /**
  * possible settings to change:
@@ -48,7 +49,7 @@ import com.rff.boingballdemo.ui.theme.backgroundColor
 
 @Composable
 fun PreferencesScreenRoot(
-    viewModel: PreferencesViewModel = PreferencesViewModel()
+    viewModel: PreferencesViewModel = koinViewModel(),
 ) {
     val state by viewModel.uiState.collectAsStateWithLifecycle()
     PreferencesScreen(
