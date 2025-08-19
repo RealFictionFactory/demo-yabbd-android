@@ -14,17 +14,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.rff.boingballdemo.ui.theme.BoingBallDemoTheme
+import com.rff.boingballdemo.ui.theme.DefaultAmigaOs13PickerColors
 import com.rff.boingballdemo.ui.theme.amigaOs13Blue
-import com.rff.boingballdemo.ui.theme.blueColor
-import com.rff.boingballdemo.ui.theme.greenColor
-import com.rff.boingballdemo.ui.theme.redColor
-
-val DefaultAmigaOs13PickerColors = listOf(
-    redColor,
-    amigaOs13Blue,
-    greenColor,
-    Color.Black
-)
 
 @Composable
 fun AmigaOs13ColorPicker(

@@ -15,36 +15,20 @@ class AppSettings(
 ) {
     private val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = PREFS_FILENAME)
 
-    var themeColorIndexFlow: Flow<Int> = context.dataStore.data
+    val boingBallPrefs: Flow<BoingBallPrefs> = context.dataStore.data
         .map { preferences ->
-            preferences[KEY_THEME_COLOR_INDEX] ?: 0
+            BoingBallPrefs(
+                themeColorIndex =  preferences[KEY_THEME_COLOR_INDEX] ?: 1,
+                altColorIndex = preferences[KEY_ALT_COLOR_INDEX] ?: 3,
+                drawFrames = preferences[KEY_DRAW_FRAMES] ?: true
+            )
         }
 
-    var altColorIndex: Flow<Int> = context.dataStore.data
-        .map { preferences ->
-            preferences[KEY_ALT_COLOR_INDEX] ?: 0
-        }
-
-    var drawFrames: Flow<Boolean> = context.dataStore.data
-        .map { preferences ->
-            preferences[KEY_DRAW_FRAMES] ?: true
-        }
-
-    suspend fun saveThemeColorIndex(context: Context, index: Int) {
+    suspend fun saveBoingBallPrefs(value: BoingBallPrefs) {
         context.dataStore.edit { preferences ->
-            preferences[KEY_THEME_COLOR_INDEX] = index
-        }
-    }
-
-    suspend fun saveAltColorIndex(context: Context, index: Int) {
-        context.dataStore.edit { preferences ->
-            preferences[KEY_ALT_COLOR_INDEX] = index
-        }
-    }
-
-    suspend fun saveDrawFrames(context: Context, value: Boolean) {
-        context.dataStore.edit { preferences ->
-            preferences[KEY_DRAW_FRAMES] = value
+            preferences[KEY_THEME_COLOR_INDEX] = value.themeColorIndex
+            preferences[KEY_ALT_COLOR_INDEX] = value.altColorIndex
+            preferences[KEY_DRAW_FRAMES] = value.drawFrames
         }
     }
 
@@ -55,3 +39,9 @@ class AppSettings(
         private val KEY_DRAW_FRAMES = booleanPreferencesKey("draw_frames")
     }
 }
+
+data class BoingBallPrefs(
+    val themeColorIndex: Int,
+    val altColorIndex: Int,
+    val drawFrames: Boolean,
+)

@@ -16,7 +16,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -28,10 +27,10 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rff.boingballdemo.R
 import com.rff.boingballdemo.component.AmigaOs13Button
-import com.rff.boingballdemo.component.AmigaToolbar
 import com.rff.boingballdemo.component.AmigaOs13CheckBox
 import com.rff.boingballdemo.component.AmigaOs13ColorPicker
-import com.rff.boingballdemo.component.DefaultAmigaOs13PickerColors
+import com.rff.boingballdemo.component.AmigaToolbar
+import com.rff.boingballdemo.ui.theme.AltAmigaOs13PickerColors
 import com.rff.boingballdemo.ui.theme.BoingBallDemoTheme
 import com.rff.boingballdemo.ui.theme.amigaOs13Blue
 import com.rff.boingballdemo.ui.theme.backgroundColor
@@ -67,7 +66,6 @@ fun PreferencesScreen(
 ) {
     var mainColorIndex by remember { mutableIntStateOf(0) }
     var alternateColorIndex by remember { mutableIntStateOf(3) }
-    val altColors = DefaultAmigaOs13PickerColors.subList(0, 3).plus(Color.White)
 
     Box(
         modifier = Modifier
@@ -96,17 +94,17 @@ fun PreferencesScreen(
                     selectedIndex = mainColorIndex,
                     onColorSelected = { index ->
                         mainColorIndex = index
-                        onAction(PreferencesAction.ChangeThemeColor(DefaultAmigaOs13PickerColors[index]))
+                        onAction(PreferencesAction.ChangeThemeColor(index))
                     }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(text = "Pick alternate BB color")
                 AmigaOs13ColorPicker(
                     selectedIndex = alternateColorIndex,
-                    colors = altColors,
+                    colors = AltAmigaOs13PickerColors,
                     onColorSelected = { index ->
                         alternateColorIndex = index
-                        onAction(PreferencesAction.ChangeAltColor(altColors[index]))
+                        onAction(PreferencesAction.ChangeAltColor(index))
                     }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
