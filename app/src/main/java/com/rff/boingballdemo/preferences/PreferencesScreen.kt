@@ -15,9 +15,6 @@ import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -64,9 +61,6 @@ fun PreferencesScreen(
     state: PreferencesState,
     onAction: (PreferencesAction) -> Unit,
 ) {
-    var mainColorIndex by remember { mutableIntStateOf(0) }
-    var alternateColorIndex by remember { mutableIntStateOf(3) }
-
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -91,19 +85,17 @@ fun PreferencesScreen(
             ) {
                 Text(text = "Pick main BB color")
                 AmigaOs13ColorPicker(
-                    selectedIndex = mainColorIndex,
+                    selectedIndex = state.themeColorIndex,
                     onColorSelected = { index ->
-                        mainColorIndex = index
                         onAction(PreferencesAction.ChangeThemeColor(index))
                     }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 Text(text = "Pick alternate BB color")
                 AmigaOs13ColorPicker(
-                    selectedIndex = alternateColorIndex,
+                    selectedIndex = state.altColorIndex,
                     colors = AltAmigaOs13PickerColors,
                     onColorSelected = { index ->
-                        alternateColorIndex = index
                         onAction(PreferencesAction.ChangeAltColor(index))
                     }
                 )
