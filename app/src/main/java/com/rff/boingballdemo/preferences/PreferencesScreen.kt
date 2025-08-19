@@ -40,7 +40,7 @@ import org.koin.compose.viewmodel.koinViewModel
  * possible settings to change:
  * ASAP:
  * - Boing Ball colors (main [red, blue, green] and alternate [white, other?])
- * - Draw Boing Ball square frames (true/false)
+ * - Draw Boing Ball square borders (true/false)
  * IN FUTURE:
  * - Boing Ball segments number
  * - OS 1.3 / 2.0+ - changes toolbar and font
@@ -112,10 +112,10 @@ fun PreferencesScreen(
                     modifier = Modifier.padding(vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(text = "Draw BB square frames")
+                    Text(text = "Draw BB square borders")
                     Spacer(modifier = Modifier.width(8.dp))
                     AmigaOs13CheckBox(
-                        isChecked = state.drawFrames,
+                        isChecked = state.drawBorders,
                         onCheckChanged = { newState ->
                             onAction(PreferencesAction.ChangeFrameDraw(newState))
                         }

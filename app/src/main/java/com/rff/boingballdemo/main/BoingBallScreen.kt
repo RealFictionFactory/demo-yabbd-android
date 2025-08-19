@@ -1,4 +1,4 @@
-package com.rff.boingballdemo
+package com.rff.boingballdemo.main
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -24,15 +25,39 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.rff.boingballdemo.main.BoingBallViewModel
+import com.rff.boingballdemo.R
 import com.rff.boingballdemo.component.AmigaToolbar
 import com.rff.boingballdemo.component.BoingBallView
 import com.rff.boingballdemo.ui.theme.BoingBallDemoTheme
 import com.rff.boingballdemo.ui.theme.TopazFont
 import com.rff.boingballdemo.ui.theme.backgroundColor
+import org.koin.androidx.compose.koinViewModel
+
+@Composable
+fun BoingBallScreenRoot(
+    viewModel: BoingBallViewModel = koinViewModel(),
+    onPreferencesClick: () -> Unit,
+) {
+    val state by viewModel.uiState.collectAsStateWithLifecycle()
+
+    BoingBallScreen(
+        state = state,
+        onAction = { action ->
+            when (action) {
+                BoingBallAction.Preferences -> {
+                    onPreferencesClick()
+                }
+            }
+        }
+    )
+}
 
 @Composable
 fun BoingBallScreen(
-    onPreferencesClick: () -> Unit = {},
+    state: BoingBallState,
+    onAction: (BoingBallAction) -> Unit = {},
 ) {
     Box(
         modifier = Modifier
@@ -58,7 +83,10 @@ fun BoingBallScreen(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 BoingBallView(
-                    modifier = Modifier.padding(8.dp)
+                    modifier = Modifier.padding(8.dp),
+                    themeColor = state.themeColor,
+                    altColor = state.altColor,
+                    drawBorders = state.drawBorders,
                 )
             }
         }
@@ -66,7 +94,7 @@ fun BoingBallScreen(
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(top = 40.dp, end = 40.dp)
-                .clickable { onPreferencesClick() },
+                .clickable { onAction(BoingBallAction.Preferences) },
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Image(
@@ -84,11 +112,17 @@ fun BoingBallScreen(
     }
 }
 
+private val previewState = BoingBallState(
+    themeColor = Color.Red,
+    altColor = Color.White,
+    drawBorders = false,
+)
+
 @Preview
 @Composable
 private fun BoingBallScreenPreview() {
     BoingBallDemoTheme {
-        BoingBallScreen()
+        BoingBallScreen(previewState)
     }
 }
 
@@ -96,6 +130,6 @@ private fun BoingBallScreenPreview() {
 @Composable
 private fun BoingBallScreenLandscapePreview() {
     BoingBallDemoTheme {
-        BoingBallScreen()
+        BoingBallScreen(previewState)
     }
 }

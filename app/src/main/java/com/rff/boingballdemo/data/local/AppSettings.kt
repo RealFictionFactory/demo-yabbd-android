@@ -20,7 +20,7 @@ class AppSettings(
             BoingBallPrefs(
                 themeColorIndex =  preferences[KEY_THEME_COLOR_INDEX] ?: 1,
                 altColorIndex = preferences[KEY_ALT_COLOR_INDEX] ?: 3,
-                drawFrames = preferences[KEY_DRAW_FRAMES] ?: true
+                drawBorders = preferences[KEY_DRAW_BORDERS] ?: true
             )
         }
 
@@ -28,7 +28,7 @@ class AppSettings(
         context.dataStore.edit { preferences ->
             preferences[KEY_THEME_COLOR_INDEX] = value.themeColorIndex
             preferences[KEY_ALT_COLOR_INDEX] = value.altColorIndex
-            preferences[KEY_DRAW_FRAMES] = value.drawFrames
+            preferences[KEY_DRAW_BORDERS] = value.drawBorders
         }
     }
 
@@ -36,12 +36,12 @@ class AppSettings(
         const val PREFS_FILENAME = "boing_ball_user_prefs"
         private val KEY_THEME_COLOR_INDEX = intPreferencesKey("theme_color_index")
         private val KEY_ALT_COLOR_INDEX = intPreferencesKey("alt_color_index")
-        private val KEY_DRAW_FRAMES = booleanPreferencesKey("draw_frames")
+        private val KEY_DRAW_BORDERS = booleanPreferencesKey("draw_borders")
     }
 }
 
 data class BoingBallPrefs(
     val themeColorIndex: Int,
     val altColorIndex: Int,
-    val drawFrames: Boolean,
+    val drawBorders: Boolean,
 )

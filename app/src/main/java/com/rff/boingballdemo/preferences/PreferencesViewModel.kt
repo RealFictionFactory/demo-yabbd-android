@@ -27,7 +27,7 @@ class PreferencesViewModel(
                 it.copy(
                     themeColor = DefaultAmigaOs13PickerColors[prefs.themeColorIndex],
                     altColor = AltAmigaOs13PickerColors[prefs.altColorIndex],
-                    drawFrames = prefs.drawFrames,
+                    drawBorders = prefs.drawBorders,
                 )
             }
         }
@@ -42,14 +42,14 @@ class PreferencesViewModel(
                 _uiState.update { it.copy(altColor = AltAmigaOs13PickerColors[action.index]) }
             }
             is PreferencesAction.ChangeFrameDraw -> {
-                _uiState.update { it.copy(drawFrames = action.draw) }
+                _uiState.update { it.copy(drawBorders = action.draw) }
             }
             PreferencesAction.BringDefaults -> {
                 _uiState.update {
                     it.copy(
                         themeColor = redColor,
                         altColor = Color.White,
-                        drawFrames = true,
+                        drawBorders = true,
                     )
                 }
             }
@@ -65,7 +65,7 @@ class PreferencesViewModel(
                 BoingBallPrefs(
                     themeColorIndex = DefaultAmigaOs13PickerColors.indexOf(_uiState.value.themeColor),
                     altColorIndex = AltAmigaOs13PickerColors.indexOf(_uiState.value.altColor),
-                    drawFrames = _uiState.value.drawFrames,
+                    drawBorders = _uiState.value.drawBorders,
                 )
             )
         }

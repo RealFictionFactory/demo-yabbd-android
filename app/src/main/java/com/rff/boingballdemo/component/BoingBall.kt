@@ -36,8 +36,6 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.rff.boingballdemo.ui.theme.BoingBallDemoTheme
 import com.rff.boingballdemo.utils.Point3D
-import com.rff.boingballdemo.ui.theme.redColor
-import com.rff.boingballdemo.ui.theme.whiteColor
 import com.rff.boingballdemo.utils.Face
 import com.rff.boingballdemo.utils.TAU
 import com.rff.boingballdemo.utils.toRadians
@@ -52,7 +50,10 @@ internal const val BOING_BALL_COLUMNS = 16
 @Composable
 fun BoingBall(
     modifier : Modifier = Modifier,
-    tilt     : Float    = -23.5f // Earth-like axial tilt
+    tilt     : Float    = -23.5f, // Earth-like axial tilt
+    themeColor: Color,
+    altColor: Color,
+    drawBorders: Boolean,
 ) {
     val vBounce = remember { Animatable(0f) }
     var angle by remember { mutableFloatStateOf(0f) }
@@ -93,10 +94,8 @@ fun BoingBall(
         }
     }
 
-    LaunchedEffect(Unit) {
-        if (!isResumed) return@LaunchedEffect
-
-        while (true) {
+    LaunchedEffect(isResumed) {
+        while (isResumed) {
             if (direction) {
                 angle += ROTATION_SPEED // radians per frame
             } else {
@@ -111,9 +110,7 @@ fun BoingBall(
     val currentBoing by rememberUpdatedState(boing)
 
     LaunchedEffect(isResumed) {
-        if (!isResumed) return@LaunchedEffect
-
-        while (true) {
+        while (isResumed) {
             angle += 0.005f // radians per frame
             // fall quickly
             vBounce.animateTo(
@@ -165,7 +162,10 @@ fun BoingBall(
             cy = offsetY,
             radius = radius,
             rotationAngle = angle,
-            earthTiltAngle = tz
+            earthTiltAngle = tz,
+            ballThemeColor = themeColor,
+            ballAltColor = altColor,
+            drawBorders = drawBorders,
         )
     }
 }
@@ -178,9 +178,9 @@ private fun DrawScope.boingBall(
     radius: Float,
     rotationAngle: Float,
     earthTiltAngle: Float,
-    ballThemeColor: Color = redColor,
-    ballAltColor: Color = whiteColor,
-    drawFrames: Boolean = true,
+    ballThemeColor: Color,
+    ballAltColor: Color,
+    drawBorders: Boolean,
 ) {
     val columns = BOING_BALL_COLUMNS
     val rows = BOING_BALL_ROWS
@@ -249,7 +249,7 @@ private fun DrawScope.boingBall(
         .forEach { f ->
             drawPath(f.path, color = f.color)
 
-            if (drawFrames) {
+            if (drawBorders) {
                 drawPath(f.path, color = Color.Black, style = Stroke(width = 0.8f))
             }
         }
@@ -260,7 +260,13 @@ private fun DrawScope.boingBall(
 private fun BoingBallPreview() {
     BoingBallDemoTheme {
         Box(modifier = Modifier.size(300.dp)) {
-            BoingBall(modifier = Modifier.fillMaxSize())
+            BoingBall(
+                modifier = Modifier.fillMaxSize(),
+                tilt = +23.5f,
+                themeColor = Color.Red,
+                altColor = Color.White,
+                drawBorders = false,
+            )
         }
     }
 }
