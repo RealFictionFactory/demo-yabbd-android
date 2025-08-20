@@ -17,9 +17,20 @@ if (keystorePropertiesFile.exists()) {
     throw GradleException("Missing keystore.properties file in project root.")
 }
 
+val packageName = "com.rff.boingballdemo"
 android {
-    namespace = "com.rff.boingballdemo"
+    namespace = packageName
     compileSdk = libs.versions.compileSdk.get().toInt()
+
+    defaultConfig {
+        applicationId = packageName
+        minSdk = libs.versions.minSdk.get().toInt()
+        targetSdk = libs.versions.targetSdk.get().toInt()
+        versionCode = libs.versions.appVersionCode.get().toInt()
+        versionName = libs.versions.appVersion.get()
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
 
     signingConfigs {
         create("release") {
@@ -28,16 +39,6 @@ android {
             storeFile = rootProject.file(keystoreProperties["storeFile"] as String)
             storePassword = keystoreProperties["storePassword"] as String
         }
-    }
-
-    defaultConfig {
-        applicationId = "com.rff.boingballdemo"
-        minSdk = libs.versions.minSdk.get().toInt()
-        targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 10001
-        versionName = "1.0.0"
-
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
