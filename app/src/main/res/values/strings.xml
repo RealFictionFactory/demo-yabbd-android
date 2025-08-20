@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">YABBD</string>
-    <string name="app_full_name">Yet Another Boing Ball Demo</string>
+    <string name="app_name" translatable="false">YABBD</string>
+    <string name="app_full_name" translatable="false">Yet Another Boing Ball Demo</string>
 
     <string name="preferences">Preferences</string>
     <string name="preferences_pick_main_bb_color">Pick main BB color</string>
