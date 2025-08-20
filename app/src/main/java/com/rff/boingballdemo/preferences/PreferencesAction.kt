@@ -5,5 +5,6 @@ sealed interface PreferencesAction {
     data class ChangeAltColor(val index: Int) : PreferencesAction
     data class ChangeFrameDraw(val draw: Boolean) : PreferencesAction
     data object BringDefaults : PreferencesAction
+    data object BringAppDefaults : PreferencesAction
     data object SaveSettings : PreferencesAction
 }

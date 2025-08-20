@@ -51,6 +51,17 @@ class PreferencesViewModel(
                         drawBorders = false,
                     )
                 }
+                saveCurrentSettings()
+            }
+            PreferencesAction.BringAppDefaults -> {
+                _uiState.update {
+                    it.copy(
+                        themeColorIndex = 1,
+                        altColorIndex = 3,
+                        drawBorders = true,
+                    )
+                }
+                saveCurrentSettings()
             }
             PreferencesAction.SaveSettings -> {
                 saveCurrentSettings()

@@ -1,7 +1,7 @@
 package com.rff.boingballdemo.preferences
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -61,13 +61,15 @@ fun PreferencesScreen(
     state: PreferencesState,
     onAction: (PreferencesAction) -> Unit,
 ) {
-    Box(
+    BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
             .background(color = backgroundColor)
             .windowInsetsPadding(WindowInsets.safeDrawing),
         contentAlignment = Alignment.Center
     ) {
+        val isLandscape = maxWidth > maxHeight
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -77,60 +79,153 @@ fun PreferencesScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             AmigaToolbar(stringResource(R.string.preferences))
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(color = amigaOs13Blue)
-                    .padding(16.dp)
-            ) {
-                Text(text = "Pick main BB color")
-                AmigaOs13ColorPicker(
-                    selectedIndex = state.themeColorIndex,
-                    onColorSelected = { index ->
-                        onAction(PreferencesAction.ChangeThemeColor(index))
-                    }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(text = "Pick alternate BB color")
-                AmigaOs13ColorPicker(
-                    selectedIndex = state.altColorIndex,
-                    colors = AltAmigaOs13PickerColors,
-                    onColorSelected = { index ->
-                        onAction(PreferencesAction.ChangeAltColor(index))
-                    }
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                Row(
-                    modifier = Modifier.padding(vertical = 8.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(text = "Draw BB square borders")
-                    Spacer(modifier = Modifier.width(8.dp))
-                    AmigaOs13CheckBox(
-                        isChecked = state.drawBorders,
-                        onCheckChanged = { newState ->
-                            onAction(PreferencesAction.ChangeFrameDraw(newState))
-                        }
-                    )
+            if (isLandscape) {
+                LandscapePreferencesLayout(state, onAction)
+            } else {
+                PortraitPreferencesLayout(state, onAction)
+            }
+        }
+    }
+}
+
+@Composable
+fun PortraitPreferencesLayout(
+    state: PreferencesState,
+    onAction: (PreferencesAction) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .background(color = amigaOs13Blue)
+            .padding(16.dp)
+    ) {
+        Text(text = stringResource(R.string.preferences_pick_main_bb_color))
+        AmigaOs13ColorPicker(
+            selectedIndex = state.themeColorIndex,
+            onColorSelected = { index ->
+                onAction(PreferencesAction.ChangeThemeColor(index))
+            }
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Text(text = stringResource(R.string.preferences_pick_alternate_bb_color))
+        AmigaOs13ColorPicker(
+            selectedIndex = state.altColorIndex,
+            colors = AltAmigaOs13PickerColors,
+            onColorSelected = { index ->
+                onAction(PreferencesAction.ChangeAltColor(index))
+            }
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        Row(
+            modifier = Modifier.padding(vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = stringResource(R.string.preferences_draw_bb_square_borders))
+            Spacer(modifier = Modifier.width(8.dp))
+            AmigaOs13CheckBox(
+                isChecked = state.drawBorders,
+                onCheckChanged = { newState ->
+                    onAction(PreferencesAction.ChangeFrameDraw(newState))
                 }
-                Spacer(modifier = Modifier.height(8.dp))
-                AmigaOs13Button(
-                    text = "Bring BB defaults",
-                    onClick = { onAction(PreferencesAction.BringDefaults) }
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-                AmigaOs13Button(
-                    text = "Save settings",
-                    onClick = { onAction(PreferencesAction.SaveSettings) }
+            )
+        }
+        Spacer(modifier = Modifier.height(8.dp))
+        AmigaOs13Button(
+            text = stringResource(R.string.preferences_set_amiga_defaults),
+            onClick = { onAction(PreferencesAction.BringDefaults) }
+        )
+        Spacer(modifier = Modifier.height(8.dp))
+        AmigaOs13Button(
+            text = stringResource(R.string.preferences_set_app_defaults),
+            onClick = { onAction(PreferencesAction.BringAppDefaults) }
+        )
+        Spacer(modifier = Modifier.height(24.dp))
+        AmigaOs13Button(
+            text = stringResource(R.string.preferences_save_current_settings),
+            onClick = { onAction(PreferencesAction.SaveSettings) }
+        )
+    }
+}
+
+@Composable
+fun LandscapePreferencesLayout(
+    state: PreferencesState,
+    onAction: (PreferencesAction) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        modifier = modifier
+            .fillMaxSize()
+            .background(color = amigaOs13Blue)
+            .padding(16.dp)
+    ) {
+        Column(modifier = Modifier.weight(1f)) {
+            Text(text = stringResource(R.string.preferences_pick_main_bb_color))
+            AmigaOs13ColorPicker(
+                selectedIndex = state.themeColorIndex,
+                onColorSelected = { index ->
+                    onAction(PreferencesAction.ChangeThemeColor(index))
+                }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = stringResource(R.string.preferences_pick_alternate_bb_color))
+            AmigaOs13ColorPicker(
+                selectedIndex = state.altColorIndex,
+                colors = AltAmigaOs13PickerColors,
+                onColorSelected = { index ->
+                    onAction(PreferencesAction.ChangeAltColor(index))
+                }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Row(
+                modifier = Modifier.padding(vertical = 8.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(text = stringResource(R.string.preferences_draw_bb_square_borders))
+                Spacer(modifier = Modifier.width(8.dp))
+                AmigaOs13CheckBox(
+                    isChecked = state.drawBorders,
+                    onCheckChanged = { newState ->
+                        onAction(PreferencesAction.ChangeFrameDraw(newState))
+                    }
                 )
             }
+        }
+        Spacer(modifier = Modifier.width(16.dp))
+        Column(modifier = Modifier.weight(1f)) {
+            AmigaOs13Button(
+                text = stringResource(R.string.preferences_set_amiga_defaults),
+                onClick = { onAction(PreferencesAction.BringDefaults) }
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            AmigaOs13Button(
+                text = stringResource(R.string.preferences_set_app_defaults),
+                onClick = { onAction(PreferencesAction.BringAppDefaults) }
+            )
+            Spacer(modifier = Modifier.height(24.dp))
+            AmigaOs13Button(
+                text = stringResource(R.string.preferences_save_current_settings),
+                onClick = { onAction(PreferencesAction.SaveSettings) }
+            )
         }
     }
 }
 
 @Preview
 @Composable
-private fun PreferencesScreenPreview() {
+private fun PreferencesScreenPortraitPreview() {
+    BoingBallDemoTheme {
+        PreferencesScreen(
+            state = PreferencesState(),
+            onAction = {}
+        )
+    }
+}
+
+@Preview(device = "spec:parent=pixel_5,orientation=landscape")
+@Composable
+private fun PreferencesScreenLandscapePreview() {
     BoingBallDemoTheme {
         PreferencesScreen(
             state = PreferencesState(),

@@ -7,5 +7,5 @@ import com.rff.boingballdemo.ui.theme.whiteColor
 data class BoingBallState(
     val themeColor: Color = amigaOs13Blue,
     val altColor: Color = whiteColor,
-    val drawBorders: Boolean = false,
+    val drawBorders: Boolean = true,
 )

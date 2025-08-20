@@ -12,6 +12,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -35,8 +36,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.rff.boingballdemo.ui.theme.BoingBallDemoTheme
-import com.rff.boingballdemo.utils.Point3D
+import com.rff.boingballdemo.ui.theme.amigaOs13Blue
 import com.rff.boingballdemo.utils.Face
+import com.rff.boingballdemo.utils.Point3D
 import com.rff.boingballdemo.utils.TAU
 import com.rff.boingballdemo.utils.toRadians
 import kotlin.math.PI
@@ -74,8 +76,11 @@ fun BoingBall(
     val lifecycleOwner = LocalLifecycleOwner.current
 
     // State to track if the app is currently resumed
-    var isResumed by remember { mutableStateOf(lifecycleOwner.lifecycle.currentState.isAtLeast(
-        Lifecycle.State.RESUMED)) }
+    var isResumed by remember {
+        mutableStateOf(
+            lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)
+        )
+    }
 
     // Use DisposableEffect for lifecycle observation
     // This ensures the observer is removed when the composable leaves the composition
@@ -151,6 +156,7 @@ fun BoingBall(
         val cx = radius + (maxX - radius) * hBounce
         val tz = tilt.toRadians()
 
+        // shadow
         drawCircle(
             color = Color.DarkGray,
             radius = radius,
@@ -259,13 +265,16 @@ private fun DrawScope.boingBall(
 @Composable
 private fun BoingBallPreview() {
     BoingBallDemoTheme {
-        Box(modifier = Modifier.size(300.dp)) {
+        Box(modifier = Modifier
+            .size(300.dp)
+            .padding(32.dp)
+        ) {
             BoingBall(
                 modifier = Modifier.fillMaxSize(),
                 tilt = +23.5f,
-                themeColor = Color.Red,
+                themeColor = amigaOs13Blue,
                 altColor = Color.White,
-                drawBorders = false,
+                drawBorders = true,
             )
         }
     }
