@@ -6,7 +6,7 @@ import kotlin.math.cos
 import kotlin.math.sin
 
 data class Point3D(val x: Float, val y: Float, val z: Float) {
-    operator fun minus(o: Point3D) = Point3D(x-o.x, y-o.y, z-o.z)
+    operator fun minus(o: Point3D) = Point3D(x - o.x, y - o.y, z - o.z)
 
     fun cross(point: Point3D) = Point3D(
         y * point.z - z * point.y,
@@ -15,7 +15,7 @@ data class Point3D(val x: Float, val y: Float, val z: Float) {
     )
 
     /** iloczyn skalarny */
-    infix fun dot(o: Point3D) = x*o.x + y*o.y + z*o.z
+    infix fun dot(o: Point3D) = x * o.x + y * o.y + z * o.z
 
     private fun rotate(yaw: Float, pitch: Float): Point3D {
         val cy = cos(yaw)
@@ -23,19 +23,21 @@ data class Point3D(val x: Float, val y: Float, val z: Float) {
         val cp = cos(pitch)
         val sp = sin(pitch)
 
-        val x1 =  x * cy + z * sy
+        val x1 = x * cy + z * sy
         val z1 = -x * sy + z * cy          // yaw
-        val y1 =  y * cp - z1 * sp
-        val z2 =  y * sp + z1 * cp         // pitch
+        val y1 = y * cp - z1 * sp
+        val z2 = y * sp + z1 * cp         // pitch
+
         return Point3D(x1, y1, z2)
     }
 
     fun rotateY(angle: Float): Point3D {
         val c = cos(angle)
         val s = sin(angle)
+
         return Point3D(
-            x =  x * c + z * s,
-            y =  y,
+            x = x * c + z * s,
+            y = y,
             z = -x * s + z * c
         )
     }
@@ -43,10 +45,11 @@ data class Point3D(val x: Float, val y: Float, val z: Float) {
     fun rotateZ(angle: Float): Point3D {
         val c = cos(angle)
         val s = sin(angle)
+
         return Point3D(
-            x =  x * c - y * s,
-            y =  x * s + y * c,
-            z =  z
+            x = x * c - y * s,
+            y = x * s + y * c,
+            z = z
         )
     }
 

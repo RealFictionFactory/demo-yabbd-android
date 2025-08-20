@@ -12,13 +12,16 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
@@ -29,11 +32,13 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.rff.boingballdemo.ui.theme.BoingBallDemoTheme
-import com.rff.boingballdemo.utils.Point3D
-import com.rff.boingballdemo.ui.theme.redColor
-import com.rff.boingballdemo.ui.theme.whiteColor
+import com.rff.boingballdemo.ui.theme.amigaOs13Blue
 import com.rff.boingballdemo.utils.Face
+import com.rff.boingballdemo.utils.Point3D
 import com.rff.boingballdemo.utils.TAU
 import com.rff.boingballdemo.utils.toRadians
 import kotlin.math.PI
@@ -47,7 +52,10 @@ internal const val BOING_BALL_COLUMNS = 16
 @Composable
 fun BoingBall(
     modifier : Modifier = Modifier,
-    tilt     : Float    = -23.5f // Earth-like axial tilt
+    tilt     : Float    = -23.5f, // Earth-like axial tilt
+    themeColor: Color,
+    altColor: Color,
+    drawBorders: Boolean,
 ) {
     val vBounce = remember { Animatable(0f) }
     var angle by remember { mutableFloatStateOf(0f) }
@@ -63,24 +71,58 @@ fun BoingBall(
             repeatMode = RepeatMode.Reverse
         )
     ).value
-    LaunchedEffect(Unit) {
-        while (true) {
-            if (direction)
+
+    // Get the current lifecycle owner
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    // State to track if the app is currently resumed
+    var isResumed by remember {
+        mutableStateOf(
+            lifecycleOwner.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)
+        )
+    }
+
+    // Use DisposableEffect for lifecycle observation
+    // This ensures the observer is removed when the composable leaves the composition
+    DisposableEffect(lifecycleOwner) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (event == Lifecycle.Event.ON_RESUME) {
+                isResumed = true
+            } else if (event == Lifecycle.Event.ON_PAUSE) {
+                isResumed = false
+            }
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+
+        onDispose {
+            lifecycleOwner.lifecycle.removeObserver(observer)
+        }
+    }
+
+    LaunchedEffect(isResumed) {
+        while (isResumed) {
+            if (direction) {
                 angle += ROTATION_SPEED // radians per frame
-            else
+            } else {
                 angle -= ROTATION_SPEED // radians per frame
+            }
+
             withFrameNanos { /* keep looping */ }
         }
     }
-    LaunchedEffect(Unit) {
-        while (true) {
+
+    // in my case it is unnecessary because "boing" reference does not change
+    val currentBoing by rememberUpdatedState(boing)
+
+    LaunchedEffect(isResumed) {
+        while (isResumed) {
             angle += 0.005f // radians per frame
             // fall quickly
             vBounce.animateTo(
                 targetValue = 1f,
                 animationSpec = tween(500, easing = FastOutLinearInEasing)
             )
-            boing.play()
+            currentBoing.play()
             // rise more slowly
             vBounce.animateTo(
                 targetValue = 0f,
@@ -88,11 +130,19 @@ fun BoingBall(
             )
         }
     }
-    LaunchedEffect(direction) {
+
+    LaunchedEffect(direction, isResumed) {
+        if (!isResumed) return@LaunchedEffect
+
         if (direction)
-            boing.playRight()
+            currentBoing.playRight()
         else
-            boing.playLeft()
+            currentBoing.playLeft()
+    }
+
+    LaunchedEffect(hBounce) {
+        direction = hBouncePrev > hBounce
+        hBouncePrev = hBounce
     }
 
     Canvas(modifier = modifier) {
@@ -104,10 +154,9 @@ fun BoingBall(
 
         val maxX = size.width - radius
         val cx = radius + (maxX - radius) * hBounce
-        direction = hBouncePrev > hBounce
-        hBouncePrev = hBounce
         val tz = tilt.toRadians()
 
+        // shadow
         drawCircle(
             color = Color.DarkGray,
             radius = radius,
@@ -119,7 +168,10 @@ fun BoingBall(
             cy = offsetY,
             radius = radius,
             rotationAngle = angle,
-            earthTiltAngle = tz
+            earthTiltAngle = tz,
+            ballThemeColor = themeColor,
+            ballAltColor = altColor,
+            drawBorders = drawBorders,
         )
     }
 }
@@ -132,6 +184,9 @@ private fun DrawScope.boingBall(
     radius: Float,
     rotationAngle: Float,
     earthTiltAngle: Float,
+    ballThemeColor: Color,
+    ballAltColor: Color,
+    drawBorders: Boolean,
 ) {
     val columns = BOING_BALL_COLUMNS
     val rows = BOING_BALL_ROWS
@@ -177,13 +232,19 @@ private fun DrawScope.boingBall(
 
             val path = Path().apply {
                 moveTo(p1.x, p1.y)
-                if (p1 != p2) lineTo(p2.x, p2.y)
+
+                if (p1 != p2)
+                    lineTo(p2.x, p2.y)
+
                 lineTo(p3.x, p3.y)
-                if (p3 != p4) lineTo(p4.x, p4.y)
+
+                if (p3 != p4)
+                    lineTo(p4.x, p4.y)
+
                 close()
             }
 
-            val col = if (((row + column) and 1) == 0) redColor else whiteColor
+            val col = if (((row + column) and 1) == 0) ballThemeColor else ballAltColor
             val depth = (v1.z + v2.z + v3.z + v4.z) * 0.25f
             faces += Face(path, depth, col)
         }
@@ -193,7 +254,10 @@ private fun DrawScope.boingBall(
     faces.sortedBy { it.depth }
         .forEach { f ->
             drawPath(f.path, color = f.color)
-            drawPath(f.path, color = Color.Black, style = Stroke(width = 0.8f))
+
+            if (drawBorders) {
+                drawPath(f.path, color = Color.Black, style = Stroke(width = 0.8f))
+            }
         }
 }
 
@@ -201,8 +265,17 @@ private fun DrawScope.boingBall(
 @Composable
 private fun BoingBallPreview() {
     BoingBallDemoTheme {
-        Box(modifier = Modifier.size(300.dp)) {
-            BoingBall(modifier = Modifier.fillMaxSize())
+        Box(modifier = Modifier
+            .size(300.dp)
+            .padding(32.dp)
+        ) {
+            BoingBall(
+                modifier = Modifier.fillMaxSize(),
+                tilt = +23.5f,
+                themeColor = amigaOs13Blue,
+                altColor = Color.White,
+                drawBorders = true,
+            )
         }
     }
 }

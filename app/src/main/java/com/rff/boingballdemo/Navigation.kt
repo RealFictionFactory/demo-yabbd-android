@@ -6,6 +6,9 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
+import com.rff.boingballdemo.main.BoingBallScreen
+import com.rff.boingballdemo.main.BoingBallScreenRoot
+import com.rff.boingballdemo.preferences.PreferencesScreenRoot
 import kotlinx.serialization.Serializable
 
 sealed interface Graph
@@ -34,14 +37,14 @@ fun NavGraphBuilder.mainGraph(navController: NavHostController) {
         startDestination = MainGraph.Home
     ) {
         composable<MainGraph.Home> {
-            BoingBallScreen(
+            BoingBallScreenRoot(
                 onPreferencesClick = {
                     navController.navigate(MainGraph.Preferences)
                 }
             )
         }
         composable<MainGraph.Preferences> {
-            PreferencesScreen()
+            PreferencesScreenRoot()
         }
     }
 }

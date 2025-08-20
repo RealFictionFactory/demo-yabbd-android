@@ -1,10 +1,11 @@
-package com.rff.boingballdemo
+package com.rff.boingballdemo.main
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.rememberNavController
+import com.rff.boingballdemo.Navigation
 import com.rff.boingballdemo.ui.theme.BoingBallDemoTheme
 
 class MainActivity : ComponentActivity() {

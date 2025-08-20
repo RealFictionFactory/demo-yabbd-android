@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import com.rff.boingballdemo.ui.theme.BoingBallDemoTheme
 import com.rff.boingballdemo.ui.theme.backgroundColor
@@ -14,6 +15,9 @@ import com.rff.boingballdemo.ui.theme.backgroundColor
 @Composable
 fun BoingBallView(
     modifier: Modifier = Modifier,
+    themeColor: Color,
+    altColor: Color,
+    drawBorders: Boolean,
 ) {
     Box(
         modifier = modifier
@@ -29,6 +33,9 @@ fun BoingBallView(
         BoingBall(
             modifier = modifier
                 .fillMaxSize(),
+            themeColor = themeColor,
+            altColor = altColor,
+            drawBorders = drawBorders,
         )
     }
 }
@@ -37,6 +44,10 @@ fun BoingBallView(
 @Composable
 private fun BoingBallViewPreview() {
     BoingBallDemoTheme {
-        BoingBallView()
+        BoingBallView(
+            themeColor = Color.Red,
+            altColor = Color.White,
+            drawBorders = true,
+        )
     }
 }

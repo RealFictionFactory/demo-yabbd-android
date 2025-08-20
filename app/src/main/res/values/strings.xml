@@ -1,5 +1,12 @@
 <resources>
     <string name="app_name">YABBD</string>
     <string name="app_full_name">Yet Another Boing Ball Demo</string>
+
     <string name="preferences">Preferences</string>
+    <string name="preferences_pick_main_bb_color">Pick main BB color</string>
+    <string name="preferences_pick_alternate_bb_color">Pick alternate BB color</string>
+    <string name="preferences_draw_bb_square_borders">Draw BB square borders</string>
+    <string name="preferences_set_amiga_defaults">Set Amiga defaults</string>
+    <string name="preferences_set_app_defaults">Set app defaults</string>
+    <string name="preferences_save_current_settings">Save current settings</string>
 </resources>

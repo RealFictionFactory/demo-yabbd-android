@@ -14,4 +14,17 @@ val wireframeColor = Color(0xFFAA00AA)
 val backgroundColor = Color(0xFFAAAAAA)
 val whiteColor = Color(0xFFFFFFFF)
 val redColor = Color(0xFFFF0000)
+val greenColor = Color(0xFF00CC00)
+val blueColor = Color(0xFF0000FF)
 val amigaOs13Blue = Color(0xFF0057AF)
+val amigaOs13Orange = Color(0xFFFF8800)
+
+
+val DefaultAmigaOs13PickerColors = listOf(
+    redColor,
+    amigaOs13Blue,
+    greenColor,
+    Color.Black
+)
+
+val AltAmigaOs13PickerColors = DefaultAmigaOs13PickerColors.subList(0, 3).plus(Color.White)
