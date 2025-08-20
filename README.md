@@ -6,7 +6,7 @@ Back to the days when real computers first emerged, and users genuinely reveled 
 
 The project features two core Compose components: one responsible for rendering and animating the Boing Ball on a canvas (BoingBall.kt), and another dedicated solely to drawing the background (BoingBallBackground.kt).
 
-*(For the Boing Ball component, I leaned on AI a bit – honestly, 3D math isn't really my strong point!)*
+*(For the Boing Ball component, I used some help from AI to handle the more complex parts of the 3D math.)*
 
 - Amiga and Boing Ball are trademarks of Amiga Inc. (or whoever currently own it)
 - The original Boing Ball demo was created by RJ Mical and Dale Luck.

@@ -1,4 +1,5 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
@@ -7,15 +8,33 @@ plugins {
     alias(libs.plugins.kotlin.serialization)
 }
 
+val keystoreProperties = Properties()
+val keystorePropertiesFile = rootProject.file("keystore.properties")
+
+if (keystorePropertiesFile.exists()) {
+    keystoreProperties.load(keystorePropertiesFile.inputStream())
+} else {
+    throw GradleException("Missing keystore.properties file in project root.")
+}
+
 android {
     namespace = "com.rff.boingballdemo"
     compileSdk = libs.versions.compileSdk.get().toInt()
+
+    signingConfigs {
+        create("release") {
+            keyAlias = keystoreProperties["keyAlias"] as String
+            keyPassword = keystoreProperties["keyPassword"] as String
+            storeFile = rootProject.file(keystoreProperties["storeFile"] as String)
+            storePassword = keystoreProperties["storePassword"] as String
+        }
+    }
 
     defaultConfig {
         applicationId = "com.rff.boingballdemo"
         minSdk = libs.versions.minSdk.get().toInt()
         targetSdk = libs.versions.targetSdk.get().toInt()
-        versionCode = 10000
+        versionCode = 10001
         versionName = "1.0.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -28,6 +47,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
+            signingConfig = signingConfigs.getByName("release")
         }
     }
     compileOptions {
