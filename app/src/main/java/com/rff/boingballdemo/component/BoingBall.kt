@@ -40,6 +40,7 @@ import com.rff.boingballdemo.ui.theme.amigaOs13Blue
 import com.rff.boingballdemo.utils.Face
 import com.rff.boingballdemo.utils.Point3D
 import com.rff.boingballdemo.utils.TAU
+import com.rff.boingballdemo.utils.sameAs
 import com.rff.boingballdemo.utils.toRadians
 import kotlin.math.PI
 import kotlin.math.cos
@@ -192,39 +193,45 @@ private fun DrawScope.boingBall(
     val rows = BOING_BALL_ROWS
     val view = Point3D(0f, 0f, -1f)
 
-    /* ----- generate vertices on the fly ----- */
     fun vertex(rowIndex: Int, colIndex: Int): Point3D {
-        val lat = ((PI / rows) * (rowIndex - rows / 2f)).toFloat()   // +π/2 → –π/2
+        val lat = ((PI / rows) * (rowIndex - rows / 2f)).toFloat()   // -π/2 → +π/2
         val lon = ((TAU / columns) * colIndex)
         return Point3D(
             x = cos(lat) * cos(lon),
             y = sin(lat),
             z = cos(lat) * sin(lon)
         )
-            .rotateY(rotationAngle) // spin first
-            .rotateZ(earthTiltAngle) // constant axial tilt
+            .rotateY(rotationAngle)
+            .rotateZ(earthTiltAngle)
     }
 
-    // collect every quad (or pole triangle) into a list
     val faces = mutableListOf<Face>()
 
     for (row in 0 until rows) {
         for (column in 0 until columns) {
-            // 4 (or 3) corners, wrapped in longitude
             val v1 = vertex(row, column)
             val v2 = vertex(row, (column + 1) % columns)
             val v3 = vertex(row + 1, (column + 1) % columns)
             val v4 = vertex(row + 1, column)
-            // compute normal, use alternative edge if first is zero
+
+            // Edges for the generic quad
             val e1 = v2 - v1
             val e2 = v3 - v1
-            val normal = if (e1.isZero()) (v4 - v1).cross(e2) else e1.cross(e2)
+
+            // Pick edges that match the actual path winding at the poles:
+            // - south pole triangle uses (v1 -> v3 -> v4)
+            // - north pole triangle uses (v1 -> v2 -> v3)
+            val normal = when {
+                e1.isZero() -> (v3 - v1).cross(v4 - v1)             // south pole
+                (v3 - v4).isZero() -> (v2 - v1).cross(v3 - v1)      // north pole
+                else -> e1.cross(e2)                                // regular quad
+            }
+
             val facing = normal dot view
+            // Single, unified cull (drop back-facing)
+            if (facing <= 0f) continue
 
-            // unified cull: skip any face pointing away, but keep south-pole winding correct
-            if ((row > 0 && facing < 0f) || (row == 0 && facing > 0f)) continue
-
-            // build path in 2-D screen space
+            // Build path in screen space
             val p1 = v1.project(cx, cy, radius)
             val p2 = v2.project(cx, cy, radius)
             val p3 = v3.project(cx, cy, radius)
@@ -232,15 +239,9 @@ private fun DrawScope.boingBall(
 
             val path = Path().apply {
                 moveTo(p1.x, p1.y)
-
-                if (p1 != p2)
-                    lineTo(p2.x, p2.y)
-
+                if (!p1.sameAs(p2)) lineTo(p2.x, p2.y)   // keeps north-pole triangle as v1->v2->v3
                 lineTo(p3.x, p3.y)
-
-                if (p3 != p4)
-                    lineTo(p4.x, p4.y)
-
+                if (!p3.sameAs(p4)) lineTo(p4.x, p4.y)   // keeps south-pole triangle as v1->v3->v4
                 close()
             }
 
@@ -250,11 +251,9 @@ private fun DrawScope.boingBall(
         }
     }
 
-    /* ----- painter’s algorithm: far → near ----- */
     faces.sortedBy { it.depth }
         .forEach { f ->
             drawPath(f.path, color = f.color)
-
             if (drawBorders) {
                 drawPath(f.path, color = Color.Black, style = Stroke(width = 0.8f))
             }
