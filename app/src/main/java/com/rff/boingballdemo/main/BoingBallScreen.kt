@@ -27,7 +27,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rff.boingballdemo.R
-import com.rff.boingballdemo.component.AmigaToolbar
+import com.rff.boingballdemo.component.AmigaOs13Toolbar
 import com.rff.boingballdemo.component.BoingBallView
 import com.rff.boingballdemo.ui.theme.BoingBallDemoTheme
 import com.rff.boingballdemo.ui.theme.TopazFont
@@ -73,7 +73,7 @@ fun BoingBallScreen(
                 .padding(bottom = 2.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            AmigaToolbar(stringResource(R.string.app_full_name))
+            AmigaOs13Toolbar(stringResource(R.string.app_full_name))
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

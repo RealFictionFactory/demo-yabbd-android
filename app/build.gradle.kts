@@ -10,11 +10,12 @@ plugins {
 
 val keystoreProperties = Properties()
 val keystorePropertiesFile = rootProject.file("keystore.properties")
+val hasKeystoreProperties = keystorePropertiesFile.exists()
 
-if (keystorePropertiesFile.exists()) {
+if (hasKeystoreProperties) {
     keystoreProperties.load(keystorePropertiesFile.inputStream())
 } else {
-    throw GradleException("Missing keystore.properties file in project root.")
+    logger.warn("keystore.properties not found – debug builds will use the default signing config.")
 }
 
 val packageName = "com.rff.boingballdemo"
@@ -33,11 +34,13 @@ android {
     }
 
     signingConfigs {
-        create("release") {
-            keyAlias = keystoreProperties["keyAlias"] as String
-            keyPassword = keystoreProperties["keyPassword"] as String
-            storeFile = rootProject.file(keystoreProperties["storeFile"] as String)
-            storePassword = keystoreProperties["storePassword"] as String
+        if (hasKeystoreProperties) {
+            create("release") {
+                keyAlias = keystoreProperties["keyAlias"] as String
+                keyPassword = keystoreProperties["keyPassword"] as String
+                storeFile = rootProject.file(keystoreProperties["storeFile"] as String)
+                storePassword = keystoreProperties["storePassword"] as String
+            }
         }
     }
 
@@ -48,7 +51,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.getByName("release")
+            signingConfig = signingConfigs.findByName("release") ?: signingConfigs.getByName("debug")
         }
     }
     compileOptions {

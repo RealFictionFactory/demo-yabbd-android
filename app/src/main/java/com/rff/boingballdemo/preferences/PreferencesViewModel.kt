@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.rff.boingballdemo.data.local.AppSettings
 import com.rff.boingballdemo.data.local.BoingBallPrefs
+import kotlinx.coroutines.NonCancellable
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -11,6 +12,7 @@ import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class PreferencesViewModel(
     private val settings: AppSettings,
@@ -71,13 +73,16 @@ class PreferencesViewModel(
 
     private fun saveCurrentSettings() {
         viewModelScope.launch {
-            settings.saveBoingBallPrefs(
-                BoingBallPrefs(
-                    themeColorIndex = _uiState.value.themeColorIndex,
-                    altColorIndex = _uiState.value.altColorIndex,
-                    drawBorders = _uiState.value.drawBorders,
+            // Use NonCancellable to ensure preferences are saved even if ViewModel is cleared
+            withContext(NonCancellable) {
+                settings.saveBoingBallPrefs(
+                    BoingBallPrefs(
+                        themeColorIndex = _uiState.value.themeColorIndex,
+                        altColorIndex = _uiState.value.altColorIndex,
+                        drawBorders = _uiState.value.drawBorders,
+                    )
                 )
-            )
+            }
         }
     }
 }

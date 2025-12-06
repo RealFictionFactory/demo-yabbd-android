@@ -22,7 +22,7 @@ import com.rff.boingballdemo.ui.theme.TopazFont
 import com.rff.boingballdemo.ui.theme.amigaOs13Blue
 
 @Composable
-fun AmigaToolbar(
+fun AmigaOs13Toolbar(
     title: String,
     modifier: Modifier = Modifier,
     toolbarHeight: Dp = 28.dp,
@@ -42,7 +42,7 @@ fun AmigaToolbar(
         ) {
             Spacer(Modifier.width(4.dp))
             // Close gadget
-            CloseGadget()
+            AmigaOs13CloseGadget()
             Spacer(Modifier.width(4.dp))
             // Title
             Text(
@@ -52,15 +52,15 @@ fun AmigaToolbar(
                 fontFamily = TopazFont,
             )
             // Depth gadget
-            ToolbarPlaceholderGadget(
+            AmigaOs13ToolbarPlaceholderGadget(
                 modifier = Modifier
                     .weight(1f)
                     .fillMaxHeight()
             )
             // Bring to front gadget
-            BringToFrontGadget()
+            AmigaOs13BringToFrontGadget()
             // Send to back gadget
-            SendToBackGadget()
+            AmigaOs13SendToBackGadget()
             Spacer(Modifier.width(4.dp))
         }
     }
@@ -69,5 +69,5 @@ fun AmigaToolbar(
 @Preview
 @Composable
 private fun AmigaToolbarPreview() {
-    AmigaToolbar(title = "Amiga Toolbar")
+    AmigaOs13Toolbar(title = "Amiga Toolbar")
 }

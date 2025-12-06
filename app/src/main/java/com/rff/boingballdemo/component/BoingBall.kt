@@ -100,24 +100,15 @@ fun BoingBall(
         }
     }
 
-    LaunchedEffect(isResumed) {
-        while (isResumed) {
-            if (direction) {
-                angle += ROTATION_SPEED // radians per frame
-            } else {
-                angle -= ROTATION_SPEED // radians per frame
-            }
-
-            withFrameNanos { /* keep looping */ }
-        }
-    }
-
     // in my case it is unnecessary because "boing" reference does not change
     val currentBoing by rememberUpdatedState(boing)
 
+    // Consolidated animation loop to avoid duplicate angle updates
     LaunchedEffect(isResumed) {
+        if (!isResumed) return@LaunchedEffect
+
         while (isResumed) {
-            angle += 0.005f // radians per frame
+            // Handle bounce animation
             // fall quickly
             vBounce.animateTo(
                 targetValue = 1f,
@@ -129,6 +120,21 @@ fun BoingBall(
                 targetValue = 0f,
                 animationSpec = tween(900, easing = LinearOutSlowInEasing)
             )
+        }
+    }
+
+    // Separate rotation animation loop
+    LaunchedEffect(isResumed) {
+        if (!isResumed) return@LaunchedEffect
+
+        while (isResumed) {
+            if (direction) {
+                angle += ROTATION_SPEED // radians per frame
+            } else {
+                angle -= ROTATION_SPEED // radians per frame
+            }
+
+            withFrameNanos { /* keep looping */ }
         }
     }
 
