@@ -20,7 +20,7 @@ import com.rff.boingballdemo.ui.theme.amigaOs13Blue
 private fun Float.correct(value: Float) = this + value / 2
 
 @Composable
-internal fun CloseGadget(
+internal fun AmigaOs13CloseGadget(
     modifier: Modifier = Modifier,
 ) {
     // Aspect ratio is 12 x 10 because the base of the gadget is 10 x 10 but it contains
@@ -78,7 +78,7 @@ internal fun CloseGadget(
 }
 
 @Composable
-internal fun BringToFrontGadget(
+internal fun AmigaOs13BringToFrontGadget(
     modifier: Modifier = Modifier,
 ) {
     // Aspect ratio is 12 x 10 because the base of the gadget is 11 x 10 but it contains
@@ -129,7 +129,7 @@ internal fun BringToFrontGadget(
 }
 
 @Composable
-internal fun SendToBackGadget(
+internal fun AmigaOs13SendToBackGadget(
     modifier: Modifier = Modifier,
 ) {
     // Aspect ratio is 13 x 10 because the base of the gadget is 11 x 10 but it contains
@@ -187,7 +187,7 @@ internal fun SendToBackGadget(
 }
 
 @Composable
-fun ToolbarPlaceholderGadget(
+fun AmigaOs13ToolbarPlaceholderGadget(
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -218,7 +218,7 @@ private fun CloseGadgetPreview() {
         modifier = Modifier.size(50.dp),
         contentAlignment = Alignment.Center,
     ) {
-        CloseGadget(
+        AmigaOs13CloseGadget(
             modifier = Modifier
                 .width((3 * 12).dp)
         )
@@ -232,7 +232,7 @@ private fun BringToFrontGadgetPreview() {
         modifier = Modifier.size(50.dp),
         contentAlignment = Alignment.Center,
     ) {
-        BringToFrontGadget(
+        AmigaOs13BringToFrontGadget(
             modifier = Modifier
                 .width((3 * 12).dp)
         )
@@ -246,7 +246,7 @@ private fun SendToBackGadgetPreview() {
         modifier = Modifier.size(50.dp),
         contentAlignment = Alignment.Center,
     ) {
-        SendToBackGadget(
+        AmigaOs13SendToBackGadget(
             modifier = Modifier
                 .width((3 * 13).dp)
         )
@@ -260,7 +260,7 @@ private fun ToolbarPlaceholderGadgetPreview() {
         modifier = Modifier.size(250.dp, 50.dp),
         contentAlignment = Alignment.Center,
     ) {
-        ToolbarPlaceholderGadget(
+        AmigaOs13ToolbarPlaceholderGadget(
             modifier = Modifier
                 .height((3 * 10).dp)
                 .fillMaxSize()

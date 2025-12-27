@@ -26,7 +26,7 @@ import com.rff.boingballdemo.R
 import com.rff.boingballdemo.component.AmigaOs13Button
 import com.rff.boingballdemo.component.AmigaOs13CheckBox
 import com.rff.boingballdemo.component.AmigaOs13ColorPicker
-import com.rff.boingballdemo.component.AmigaToolbar
+import com.rff.boingballdemo.component.AmigaOs13Toolbar
 import com.rff.boingballdemo.ui.theme.AltAmigaOs13PickerColors
 import com.rff.boingballdemo.ui.theme.BoingBallDemoTheme
 import com.rff.boingballdemo.ui.theme.amigaOs13Blue
@@ -35,12 +35,12 @@ import org.koin.compose.viewmodel.koinViewModel
 
 /**
  * possible settings to change:
- * ASAP:
+ * DONE:
  * - Boing Ball colors (main [red, blue, green] and alternate [white, other?])
  * - Draw Boing Ball square borders (true/false)
  * IN FUTURE:
- * - Boing Ball segments number
  * - OS 1.3 / 2.0+ - changes toolbar and font
+ * - Boing Ball segments number
  */
 
 @Composable
@@ -78,7 +78,7 @@ fun PreferencesScreen(
                 .padding(bottom = 2.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            AmigaToolbar(stringResource(R.string.preferences))
+            AmigaOs13Toolbar(stringResource(R.string.preferences))
             if (isLandscape) {
                 LandscapePreferencesLayout(state, onAction)
             } else {

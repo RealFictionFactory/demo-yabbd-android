@@ -26,13 +26,11 @@ fun BoingBallView(
         contentAlignment = Alignment.Center
     ) {
         BoingBallBackground(
-            modifier = modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
         )
 
         BoingBall(
-            modifier = modifier
-                .fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
             themeColor = themeColor,
             altColor = altColor,
             drawBorders = drawBorders,

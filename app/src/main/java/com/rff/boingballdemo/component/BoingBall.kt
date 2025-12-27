@@ -100,24 +100,15 @@ fun BoingBall(
         }
     }
 
-    LaunchedEffect(isResumed) {
-        while (isResumed) {
-            if (direction) {
-                angle += ROTATION_SPEED // radians per frame
-            } else {
-                angle -= ROTATION_SPEED // radians per frame
-            }
-
-            withFrameNanos { /* keep looping */ }
-        }
-    }
-
     // in my case it is unnecessary because "boing" reference does not change
     val currentBoing by rememberUpdatedState(boing)
 
+    // Consolidated animation loop to avoid duplicate angle updates
     LaunchedEffect(isResumed) {
+        if (!isResumed) return@LaunchedEffect
+
         while (isResumed) {
-            angle += 0.005f // radians per frame
+            // Handle bounce animation
             // fall quickly
             vBounce.animateTo(
                 targetValue = 1f,
@@ -129,6 +120,21 @@ fun BoingBall(
                 targetValue = 0f,
                 animationSpec = tween(900, easing = LinearOutSlowInEasing)
             )
+        }
+    }
+
+    // Separate rotation animation loop
+    LaunchedEffect(isResumed) {
+        if (!isResumed) return@LaunchedEffect
+
+        while (isResumed) {
+            if (direction) {
+                angle += ROTATION_SPEED // radians per frame
+            } else {
+                angle -= ROTATION_SPEED // radians per frame
+            }
+
+            withFrameNanos { /* keep looping */ }
         }
     }
 
@@ -151,7 +157,7 @@ fun BoingBall(
         val radius = size.minDimension * 0.2f
         val bounceMax = size.height - (size.height - size.height * .9f) / 2 - radius
         val bounceMin = size.height - size.height * .9f + radius
-        val offsetY = lerp(bounceMax, bounceMin, vBounce.value)
+        val offsetY = lerp(bounceMin, bounceMax, vBounce.value)
 
         val maxX = size.width - radius
         val cx = radius + (maxX - radius) * hBounce
@@ -177,7 +183,7 @@ fun BoingBall(
     }
 }
 
-private fun lerp(max: Float, min: Float, value: Float) = min + (max - min) * value
+private fun lerp(start: Float, end: Float, fraction: Float) = start + (end - start) * fraction
 
 private fun DrawScope.boingBall(
     cx: Float,
@@ -193,26 +199,36 @@ private fun DrawScope.boingBall(
     val rows = BOING_BALL_ROWS
     val view = Point3D(0f, 0f, -1f)
 
-    fun vertex(rowIndex: Int, colIndex: Int): Point3D {
-        val lat = ((PI / rows) * (rowIndex - rows / 2f)).toFloat()   // -π/2 → +π/2
-        val lon = ((TAU / columns) * colIndex)
-        return Point3D(
-            x = cos(lat) * cos(lon),
-            y = sin(lat),
-            z = cos(lat) * sin(lon)
-        )
-            .rotateY(rotationAngle)
-            .rotateZ(earthTiltAngle)
+    // Pre-calculate all vertices once to avoid redundant calculations
+    // This creates (rows+1) × columns vertices = 9 × 16 = 144 vertices
+    // instead of calculating ~256 times in the loop (each vertex used by ~4 quads)
+    val vertexCache = Array(rows + 1) { rowIndex ->
+        Array(columns) { colIndex ->
+            val lat = ((PI / rows) * (rowIndex - rows / 2f)).toFloat()   // -π/2 → +π/2
+            val lon = ((TAU / columns) * colIndex)
+            Point3D(
+                x = cos(lat) * cos(lon),
+                y = sin(lat),
+                z = cos(lat) * sin(lon)
+            )
+                .rotateY(rotationAngle)
+                .rotateZ(earthTiltAngle)
+        }
+    }
+
+    // Helper to get vertex from cache with wraparound for column
+    fun getVertex(rowIndex: Int, colIndex: Int): Point3D {
+        return vertexCache[rowIndex][colIndex % columns]
     }
 
     val faces = mutableListOf<Face>()
 
     for (row in 0 until rows) {
         for (column in 0 until columns) {
-            val v1 = vertex(row, column)
-            val v2 = vertex(row, (column + 1) % columns)
-            val v3 = vertex(row + 1, (column + 1) % columns)
-            val v4 = vertex(row + 1, column)
+            val v1 = getVertex(row, column)
+            val v2 = getVertex(row, column + 1)
+            val v3 = getVertex(row + 1, column + 1)
+            val v4 = getVertex(row + 1, column)
 
             // Edges for the generic quad
             val e1 = v2 - v1
@@ -246,18 +262,21 @@ private fun DrawScope.boingBall(
             }
 
             val col = if (((row + column) and 1) == 0) ballThemeColor else ballAltColor
-            val depth = (v1.z + v2.z + v3.z + v4.z) * 0.25f
+            // Use minimum Z (farthest point from camera) for more stable depth sorting
+            // This prevents z-fighting when faces have similar average depth but different extents
+            val depth = minOf(v1.z, v2.z, v3.z, v4.z)
             faces += Face(path, depth, col)
         }
     }
 
-    faces.sortedBy { it.depth }
-        .forEach { f ->
-            drawPath(f.path, color = f.color)
-            if (drawBorders) {
-                drawPath(f.path, color = Color.Black, style = Stroke(width = 0.8f))
-            }
+    // Sort in-place instead of creating a new sorted list
+    faces.sortBy { it.depth }
+    faces.forEach { f ->
+        drawPath(f.path, color = f.color)
+        if (drawBorders) {
+            drawPath(f.path, color = Color.Black, style = Stroke(width = 0.8f))
         }
+    }
 }
 
 @Preview
