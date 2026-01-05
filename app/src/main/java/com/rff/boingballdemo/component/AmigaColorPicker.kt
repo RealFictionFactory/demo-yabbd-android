@@ -10,9 +10,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -65,20 +62,7 @@ private fun AmigaOs30ColorPicker(
 ) {
     Row(
         modifier = Modifier
-            .drawBehind {
-                val stroke = 1.dp.toPx()
-                drawRect(color = whiteColor)
-                drawRect(
-                    color = blackColor,
-                    topLeft = Offset(stroke, size.height - stroke),
-                    size = Size(size.width - 2 * stroke, stroke)
-                )
-                drawRect(
-                    color = blackColor,
-                    topLeft = Offset(size.width - stroke, 0f),
-                    size = Size(stroke, size.height)
-                )
-            }
+            .amigaOs30Frame(fillColor = Color.Transparent)
             .padding(1.dp)
     ) {
         colors.forEachIndexed { index, color ->
@@ -130,24 +114,11 @@ private fun AmigaOs30ColorField(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .drawBehind {
-                    if (isSelected) {
-                        val stroke = 1.dp.toPx()
-                        drawRect(color = blackColor)
-                        drawRect(
-                            color = whiteColor,
-                            topLeft = Offset(stroke, size.height - stroke),
-                            size = Size(size.width - 2 * stroke, stroke)
-                        )
-                        drawRect(
-                            color = whiteColor,
-                            topLeft = Offset(size.width - stroke, 0f),
-                            size = Size(stroke, size.height)
-                        )
-                    } else {
-                        drawRect(color = amigaOs30Grey)
-                    }
-                }
+                .amigaOs30Frame(
+                    fillColor = amigaOs30Grey,
+                    topLeftColor = if (isSelected) blackColor else whiteColor,
+                    bottomRightColor = if (isSelected) whiteColor else blackColor
+                )
                 .padding(1.dp)
                 .background(color = amigaOs30Grey)
                 .padding(if (isSelected) 1.dp else 0.dp)

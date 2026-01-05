@@ -15,8 +15,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -85,21 +83,11 @@ private fun AmigaOs30Button(
         modifier = Modifier
             .drawBehind {
                 val pixelSize = size.height / 24
-                drawRect(color = topLeftFrameColor)
-                drawRect(
-                    color = bottomRightFrameColor,
-                    topLeft = Offset(pixelSize, size.height - pixelSize),
-                    size = Size(size.width - 2 * pixelSize, pixelSize)
-                )
-                drawRect(
-                    color = bottomRightFrameColor,
-                    topLeft = Offset(size.width - pixelSize, 0f),
-                    size = Size(pixelSize, size.height)
-                )
-                drawRect(
-                    color = backgroundColor,
-                    topLeft = Offset(pixelSize, pixelSize),
-                    size = Size(size.width - 2 * pixelSize, size.height - 2 * pixelSize)
+                drawAmigaOs30Frame(
+                    strokePx = pixelSize,
+                    fillColor = backgroundColor,
+                    topLeftColor = topLeftFrameColor,
+                    bottomRightColor = bottomRightFrameColor
                 )
             }
             .defaultMinSize(minWidth = 24.dp, minHeight = 24.dp)

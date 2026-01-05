@@ -177,21 +177,9 @@ fun AmigaOs30ToolbarPlaceholderGadget(
         modifier = modifier
             .drawBehind {
                 val pixelSize = size.height / 15
-                drawRect(color = whiteColor)
-                drawRect(
-                    color = blackColor,
-                    topLeft = Offset(pixelSize, size.height - pixelSize),
-                    size = Size(size.width - 2*pixelSize, pixelSize)
-                )
-                drawRect(
-                    color = blackColor,
-                    topLeft = Offset(size.width - pixelSize, 0f),
-                    size = Size(pixelSize, size.height)
-                )
-                drawRect(
-                    color = amigaOs30Blue,
-                    topLeft = Offset(pixelSize, pixelSize),
-                    size = Size(size.width - 2*pixelSize, size.height - 2*pixelSize)
+                drawAmigaOs30Frame(
+                    strokePx = pixelSize,
+                    fillColor = amigaOs30Blue
                 )
             }
     ) {

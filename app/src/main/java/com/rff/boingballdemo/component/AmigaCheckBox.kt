@@ -16,9 +16,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,7 +23,6 @@ import com.rff.boingballdemo.R
 import com.rff.boingballdemo.ui.theme.BoingBallDemoTheme
 import com.rff.boingballdemo.ui.theme.amigaOs30Grey
 import com.rff.boingballdemo.ui.theme.blackColor
-import com.rff.boingballdemo.ui.theme.whiteColor
 
 @Composable
 fun AmigaCheckBox(
@@ -82,25 +78,7 @@ private fun AmigaOs30CheckBox(
         modifier = Modifier
             .width(30.dp)
             .height(28.dp)
-            .drawBehind {
-                val stroke = 1.dp.toPx()
-                drawRect(color = whiteColor)
-                drawRect(
-                    color = blackColor,
-                    topLeft = Offset(stroke, size.height - stroke),
-                    size = Size(size.width - 2 * stroke, stroke)
-                )
-                drawRect(
-                    color = blackColor,
-                    topLeft = Offset(size.width - stroke, 0f),
-                    size = Size(stroke, size.height)
-                )
-                drawRect(
-                    color = amigaOs30Grey,
-                    topLeft = Offset(stroke, stroke),
-                    size = Size(size.width - 2 * stroke, size.height - 2 * stroke)
-                )
-            }
+            .amigaOs30Frame(fillColor = amigaOs30Grey)
             .clickable(
                 onClick = {
                     onCheckChanged(!isChecked)

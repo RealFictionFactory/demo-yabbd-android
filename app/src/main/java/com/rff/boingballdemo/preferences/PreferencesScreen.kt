@@ -27,8 +27,7 @@ import com.rff.boingballdemo.R
 import com.rff.boingballdemo.component.AmigaButton
 import com.rff.boingballdemo.component.AmigaCheckBox
 import com.rff.boingballdemo.component.AmigaColorPicker
-import com.rff.boingballdemo.component.AmigaOs13Toolbar
-import com.rff.boingballdemo.component.AmigaOs30Toolbar
+import com.rff.boingballdemo.component.AmigaToolbar
 import com.rff.boingballdemo.component.OSStyle
 import com.rff.boingballdemo.main.conditional
 import com.rff.boingballdemo.ui.theme.AltAmigaOs13PickerColors
@@ -85,11 +84,11 @@ fun PreferencesScreen(
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            if (state.osStyle == OSStyle.AmigaOS13) {
-                AmigaOs13Toolbar(stringResource(R.string.preferences))
-            } else {
-                AmigaOs30Toolbar(stringResource(R.string.preferences))
-            }
+            AmigaToolbar(
+                title = stringResource(R.string.preferences),
+                osStyle = state.osStyle
+            )
+
             if (isLandscape) {
                 LandscapePreferencesLayout(state, onAction)
             } else {

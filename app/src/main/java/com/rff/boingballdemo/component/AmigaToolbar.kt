@@ -23,7 +23,28 @@ import com.rff.boingballdemo.ui.theme.amigaOs13Blue
 import com.rff.boingballdemo.ui.theme.amigaOs30Blue
 
 @Composable
-fun AmigaOs13Toolbar(
+fun AmigaToolbar(
+    title: String,
+    osStyle: OSStyle,
+    modifier: Modifier = Modifier,
+    toolbarHeight: Dp = 28.dp,
+) {
+    when (osStyle) {
+        OSStyle.AmigaOS13 -> AmigaOs13Toolbar(
+            title = title,
+            modifier = modifier,
+            toolbarHeight = toolbarHeight,
+        )
+        OSStyle.AmigaOS20 -> AmigaOs30Toolbar(
+            title = title,
+            modifier = modifier,
+            toolbarHeight = toolbarHeight,
+        )
+    }
+}
+
+@Composable
+private fun AmigaOs13Toolbar(
     title: String,
     modifier: Modifier = Modifier,
     toolbarHeight: Dp = 28.dp,
@@ -68,7 +89,7 @@ fun AmigaOs13Toolbar(
 }
 
 @Composable
-fun AmigaOs30Toolbar(
+private fun AmigaOs30Toolbar(
     title: String,
     modifier: Modifier = Modifier,
     toolbarHeight: Dp = 28.dp,
