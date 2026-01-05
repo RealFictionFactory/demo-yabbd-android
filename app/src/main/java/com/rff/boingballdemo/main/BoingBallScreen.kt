@@ -28,10 +28,15 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rff.boingballdemo.R
 import com.rff.boingballdemo.component.AmigaOs13Toolbar
+import com.rff.boingballdemo.component.AmigaOs30Toolbar
 import com.rff.boingballdemo.component.BoingBallView
+import com.rff.boingballdemo.component.OSStyle
 import com.rff.boingballdemo.ui.theme.BoingBallDemoTheme
 import com.rff.boingballdemo.ui.theme.TopazFont
+import com.rff.boingballdemo.ui.theme.amigaOs30Blue
 import com.rff.boingballdemo.ui.theme.backgroundColor
+import com.rff.boingballdemo.ui.theme.blackColor
+import com.rff.boingballdemo.ui.theme.whiteColor
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -67,22 +72,44 @@ fun BoingBallScreen(
     ) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .background(color = Color.White)
-                .padding(horizontal = 2.dp)
-                .padding(bottom = 2.dp),
+                .fillMaxWidth(),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            AmigaOs13Toolbar(stringResource(R.string.app_full_name))
+            if (state.osStyle == OSStyle.AmigaOS13) {
+                AmigaOs13Toolbar(stringResource(R.string.app_full_name))
+            }
+            else {
+                AmigaOs30Toolbar(stringResource(R.string.app_full_name))
+            }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .conditional(
+                        condition = state.osStyle == OSStyle.AmigaOS13,
+                        ifTrue = {
+                            background(color = Color.White)
+                            .padding(horizontal = 2.dp)
+                            .padding(bottom = 2.dp)
+                        },
+                        ifFalse = {
+                            background(color = Color.White)
+                                .padding(horizontal = 1.dp)
+                                .background(color = amigaOs30Blue)
+                                .padding(horizontal = 2.dp)
+                                .background(color = blackColor)
+                                .padding(horizontal = 1.dp)
+                                .background(color = blackColor)
+                                .padding(bottom = 1.dp)
+                                .background(color = whiteColor)
+                                .padding(bottom = 1.dp)
+                        }
+                    )
                     .background(color = backgroundColor),
                 horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 BoingBallView(
-                    modifier = Modifier.padding(8.dp),
+                    modifier = Modifier.padding(16.dp),
                     themeColor = state.themeColor,
                     altColor = state.altColor,
                     drawBorders = state.drawBorders,
@@ -111,10 +138,21 @@ fun BoingBallScreen(
     }
 }
 
+inline fun Modifier.conditional(
+    condition: Boolean,
+    ifTrue: Modifier.() -> Modifier,
+    ifFalse: Modifier.() -> Modifier = { this },
+): Modifier = if (condition) {
+    then(ifTrue(Modifier))
+} else {
+    then(ifFalse(Modifier))
+}
+
 private val previewState = BoingBallState(
     themeColor = Color.Red,
     altColor = Color.White,
     drawBorders = false,
+    osStyle = OSStyle.AmigaOS13
 )
 
 @Preview

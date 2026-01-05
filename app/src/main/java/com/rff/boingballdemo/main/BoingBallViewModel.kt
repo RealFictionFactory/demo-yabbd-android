@@ -42,7 +42,8 @@ class BoingBallViewModel(
                     it.copy(
                         themeColor = DefaultAmigaOs13PickerColors[themeColorIndex],
                         altColor = AltAmigaOs13PickerColors[altColorIndex],
-                        drawBorders = prefs.drawBorders
+                        drawBorders = prefs.drawBorders,
+                        osStyle = prefs.osStyle,
                     )
                 }
             }

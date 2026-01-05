@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.rff.boingballdemo.component.OSStyle
 import java.io.IOException
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
@@ -30,7 +31,8 @@ class AppSettings(
             BoingBallPrefs(
                 themeColorIndex =  preferences[KEY_THEME_COLOR_INDEX] ?: 1,
                 altColorIndex = preferences[KEY_ALT_COLOR_INDEX] ?: 3,
-                drawBorders = preferences[KEY_DRAW_BORDERS] ?: true
+                drawBorders = preferences[KEY_DRAW_BORDERS] ?: true,
+                osStyle = OSStyle.entries[preferences[KEY_OS_STYLE] ?: OSStyle.AmigaOS13.ordinal]
             )
         }
 
@@ -39,6 +41,7 @@ class AppSettings(
             preferences[KEY_THEME_COLOR_INDEX] = value.themeColorIndex
             preferences[KEY_ALT_COLOR_INDEX] = value.altColorIndex
             preferences[KEY_DRAW_BORDERS] = value.drawBorders
+            preferences[KEY_OS_STYLE] = value.osStyle.ordinal
         }
     }
 
@@ -47,6 +50,7 @@ class AppSettings(
         private val KEY_THEME_COLOR_INDEX = intPreferencesKey("theme_color_index")
         private val KEY_ALT_COLOR_INDEX = intPreferencesKey("alt_color_index")
         private val KEY_DRAW_BORDERS = booleanPreferencesKey("draw_borders")
+        private val KEY_OS_STYLE = intPreferencesKey("os_style")
     }
 }
 
@@ -54,4 +58,5 @@ data class BoingBallPrefs(
     val themeColorIndex: Int,
     val altColorIndex: Int,
     val drawBorders: Boolean,
+    val osStyle: OSStyle = OSStyle.AmigaOS13
 )

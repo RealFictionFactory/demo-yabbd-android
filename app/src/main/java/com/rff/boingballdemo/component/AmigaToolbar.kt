@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.rff.boingballdemo.ui.theme.TopazFont
 import com.rff.boingballdemo.ui.theme.amigaOs13Blue
+import com.rff.boingballdemo.ui.theme.amigaOs30Blue
 
 @Composable
 fun AmigaOs13Toolbar(
@@ -66,8 +67,49 @@ fun AmigaOs13Toolbar(
     }
 }
 
+@Composable
+fun AmigaOs30Toolbar(
+    title: String,
+    modifier: Modifier = Modifier,
+    toolbarHeight: Dp = 28.dp,
+) {
+    Box(
+        modifier
+            .height(toolbarHeight)
+            .fillMaxWidth()
+            .drawBehind {
+                // background
+                drawRect(amigaOs30Blue)
+            }
+    ) {
+        Row(
+            Modifier.fillMaxSize(),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            // Close gadget
+            AmigaOs30CloseGadget()
+            AmigaOs30ToolbarPlaceholderGadget(
+                text = title,
+                modifier = Modifier
+                    .weight(1f)
+                    .fillMaxHeight()
+            )
+            // Bring to front gadget
+            AmigaOs30BringToFrontGadget()
+            // Send to back gadget
+            AmigaOs30SendToBackGadget()
+        }
+    }
+}
+
 @Preview
 @Composable
-private fun AmigaToolbarPreview() {
+private fun AmigaOs13ToolbarPreview() {
     AmigaOs13Toolbar(title = "Amiga Toolbar")
+}
+
+@Preview
+@Composable
+private fun AmigaOs30ToolbarPreview() {
+    AmigaOs30Toolbar(title = "Amiga Toolbar")
 }

@@ -13,6 +13,19 @@ val TopazFont = FontFamily(
     Font(R.font.topaz_a500)
 )
 
+val TopazFont20 = FontFamily(
+    Font(R.font.topaz_a1200)
+)
+
+val Toolbar30TextStyle = TextStyle(
+    fontFamily = TopazFont20,
+    fontWeight = FontWeight.Normal,
+    fontSize = 16.sp,
+    color = whiteColor,
+    lineHeight = 24.sp,
+    letterSpacing = 0.5.sp
+)
+
 // Set of Material typography styles to start with
 val Typography = Typography(
     bodyLarge = TextStyle(
