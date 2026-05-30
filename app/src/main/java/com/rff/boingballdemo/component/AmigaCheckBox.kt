@@ -90,7 +90,6 @@ private fun AmigaOs30CheckBox(
             Image(
                 painter = painterResource(id = R.drawable.ic_check),
                 contentDescription = "Checked",
-                colorFilter = ColorFilter.tint(blackColor)
             )
         }
     }

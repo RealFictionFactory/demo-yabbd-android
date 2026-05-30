@@ -36,6 +36,8 @@ class AppSettings(
             )
         }
 
+    fun getVersion() = "1.2.3"
+
     suspend fun saveBoingBallPrefs(value: BoingBallPrefs) {
         context.dataStore.edit { preferences ->
             preferences[KEY_THEME_COLOR_INDEX] = value.themeColorIndex

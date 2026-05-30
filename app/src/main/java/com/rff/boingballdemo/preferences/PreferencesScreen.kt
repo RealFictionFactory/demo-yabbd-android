@@ -48,7 +48,7 @@ import org.koin.compose.viewmodel.koinViewModel
  * - Draw Boing Ball square borders (true/false)
  * - OS 1.3 / 2.0+ - changes toolbar and font
  * IN PROGRESS:
- * IN FUTURE:
+ * UPCOMING:
  * - Boing Ball segments number
  */
 
@@ -210,6 +210,11 @@ fun PortraitPreferencesLayout(
             osStyle = state.osStyle,
             onClick = { onAction(PreferencesAction.SaveSettings) }
         )
+        Spacer(modifier = Modifier.weight(1f))
+        Text(
+            text = "Application version: ${state.appVersion}",
+            style = textStyle
+        )
     }
 }
 
@@ -224,111 +229,118 @@ fun LandscapePreferencesLayout(
     else
         LocalTextStyle.current.copy(fontFamily = TopazFont20)
 
-    Row(
-        modifier = modifier
-            .fillMaxSize()
-            .conditional(
-                condition = state.osStyle == OSStyle.AmigaOS13,
-                ifTrue = {
-                    background(color = Color.White)
-                        .padding(horizontal = 2.dp)
-                        .padding(bottom = 2.dp)
-                        .background(color = amigaOs13Blue)
-                },
-                ifFalse = {
-                    background(color = Color.White)
-                        .padding(horizontal = 1.dp)
-                        .background(color = amigaOs30Blue)
-                        .padding(horizontal = 2.dp)
-                        .background(color = blackColor)
-                        .padding(horizontal = 1.dp)
-                        .background(color = blackColor)
-                        .padding(bottom = 1.dp)
-                        .background(color = whiteColor)
-                        .padding(bottom = 1.dp)
-                        .background(color = backgroundColor)
-                }
-            )
-            .padding(16.dp)
-    ) {
-        Column(modifier = Modifier.weight(1f)) {
-            Text(
-                text = stringResource(R.string.preferences_pick_main_bb_color),
-                style = textStyle
-            )
-            AmigaColorPicker(
-                selectedIndex = state.themeColorIndex,
-                osStyle = state.osStyle,
-                onColorSelected = { index ->
-                    onAction(PreferencesAction.ChangeThemeColor(index))
-                }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = stringResource(R.string.preferences_pick_alternate_bb_color),
-                style = textStyle
-            )
-            AmigaColorPicker(
-                selectedIndex = state.altColorIndex,
-                osStyle = state.osStyle,
-                colors = AltAmigaOs13PickerColors,
-                onColorSelected = { index ->
-                    onAction(PreferencesAction.ChangeAltColor(index))
-                }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Row(
-                modifier = Modifier.padding(vertical = 8.dp),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
+    Column {
+        Row(
+            modifier = modifier
+                .fillMaxSize()
+                .conditional(
+                    condition = state.osStyle == OSStyle.AmigaOS13,
+                    ifTrue = {
+                        background(color = Color.White)
+                            .padding(horizontal = 2.dp)
+                            .padding(bottom = 2.dp)
+                            .background(color = amigaOs13Blue)
+                    },
+                    ifFalse = {
+                        background(color = Color.White)
+                            .padding(horizontal = 1.dp)
+                            .background(color = amigaOs30Blue)
+                            .padding(horizontal = 2.dp)
+                            .background(color = blackColor)
+                            .padding(horizontal = 1.dp)
+                            .background(color = blackColor)
+                            .padding(bottom = 1.dp)
+                            .background(color = whiteColor)
+                            .padding(bottom = 1.dp)
+                            .background(color = backgroundColor)
+                    }
+                )
+                .padding(16.dp)
+        ) {
+            Column(modifier = Modifier.weight(1f)) {
                 Text(
-                    text = stringResource(R.string.preferences_draw_bb_square_borders),
+                    text = stringResource(R.string.preferences_pick_main_bb_color),
                     style = textStyle
                 )
-                Spacer(modifier = Modifier.width(8.dp))
-                AmigaCheckBox(
-                    isChecked = state.drawBorders,
+                AmigaColorPicker(
+                    selectedIndex = state.themeColorIndex,
                     osStyle = state.osStyle,
-                    onCheckChanged = { newState ->
-                        onAction(PreferencesAction.ChangeFrameDraw(newState))
+                    onColorSelected = { index ->
+                        onAction(PreferencesAction.ChangeThemeColor(index))
                     }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = stringResource(R.string.preferences_pick_alternate_bb_color),
+                    style = textStyle
+                )
+                AmigaColorPicker(
+                    selectedIndex = state.altColorIndex,
+                    osStyle = state.osStyle,
+                    colors = AltAmigaOs13PickerColors,
+                    onColorSelected = { index ->
+                        onAction(PreferencesAction.ChangeAltColor(index))
+                    }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Row(
+                    modifier = Modifier.padding(vertical = 8.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = stringResource(R.string.preferences_draw_bb_square_borders),
+                        style = textStyle
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    AmigaCheckBox(
+                        isChecked = state.drawBorders,
+                        osStyle = state.osStyle,
+                        onCheckChanged = { newState ->
+                            onAction(PreferencesAction.ChangeFrameDraw(newState))
+                        }
+                    )
+                }
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            Column(modifier = Modifier.weight(1f)) {
+                AmigaButton(
+                    text = stringResource(
+                        if (state.osStyle == OSStyle.AmigaOS13) R.string.preferences_set_amigaos_2_style
+                        else R.string.preferences_set_amigaos_1_3_style
+                    ),
+                    osStyle = state.osStyle,
+                    onClick = {
+                        onAction(
+                            if (state.osStyle == OSStyle.AmigaOS13) PreferencesAction.SetAmigaOS20
+                            else PreferencesAction.SetAmigaOS13
+                        )
+                    }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                AmigaButton(
+                    text = stringResource(R.string.preferences_set_demo_defaults),
+                    osStyle = state.osStyle,
+                    onClick = { onAction(PreferencesAction.BringDefaults) }
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                AmigaButton(
+                    text = stringResource(R.string.preferences_set_app_defaults),
+                    osStyle = state.osStyle,
+                    onClick = { onAction(PreferencesAction.BringAppDefaults) }
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+                AmigaButton(
+                    text = stringResource(R.string.preferences_save_current_settings),
+                    osStyle = state.osStyle,
+                    onClick = { onAction(PreferencesAction.SaveSettings) }
                 )
             }
         }
-        Spacer(modifier = Modifier.width(16.dp))
-        Column(modifier = Modifier.weight(1f)) {
-            AmigaButton(
-                text = stringResource(
-                    if (state.osStyle == OSStyle.AmigaOS13) R.string.preferences_set_amigaos_2_style
-                    else R.string.preferences_set_amigaos_1_3_style
-                ),
-                osStyle = state.osStyle,
-                onClick = {
-                    onAction(
-                        if (state.osStyle == OSStyle.AmigaOS13) PreferencesAction.SetAmigaOS20
-                        else PreferencesAction.SetAmigaOS13
-                    )
-                }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            AmigaButton(
-                text = stringResource(R.string.preferences_set_demo_defaults),
-                osStyle = state.osStyle,
-                onClick = { onAction(PreferencesAction.BringDefaults) }
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            AmigaButton(
-                text = stringResource(R.string.preferences_set_app_defaults),
-                osStyle = state.osStyle,
-                onClick = { onAction(PreferencesAction.BringAppDefaults) }
-            )
-            Spacer(modifier = Modifier.height(24.dp))
-            AmigaButton(
-                text = stringResource(R.string.preferences_save_current_settings),
-                osStyle = state.osStyle,
-                onClick = { onAction(PreferencesAction.SaveSettings) }
-            )
-        }
+        Spacer(modifier = Modifier.weight(1f))
+        Text(
+            text = "Application version: ${state.appVersion}",
+            style = textStyle
+        )
     }
 }
 
@@ -347,7 +359,7 @@ private fun PreferencesScreenPortraitPreview() {
     }
 }
 
-@Preview(device = "spec:parent=pixel_5,orientation=landscape")
+@Preview(device = "spec:parent=Nexus 5,orientation=landscape")
 @Composable
 private fun PreferencesScreenLandscapePreview() {
     BoingBallDemoTheme {
