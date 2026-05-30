@@ -42,12 +42,15 @@ class PreferencesViewModel(
         when (action) {
             is PreferencesAction.ChangeThemeColor -> {
                 _uiState.update { it.copy(themeColorIndex = action.index) }
+                saveCurrentSettings()
             }
             is PreferencesAction.ChangeAltColor -> {
                 _uiState.update { it.copy(altColorIndex = action.index) }
+                saveCurrentSettings()
             }
             is PreferencesAction.ChangeFrameDraw -> {
                 _uiState.update { it.copy(drawBorders = action.draw) }
+                saveCurrentSettings()
             }
             PreferencesAction.BringDefaults -> {
                 _uiState.update {
