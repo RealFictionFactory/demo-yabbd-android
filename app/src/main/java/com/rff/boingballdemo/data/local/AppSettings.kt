@@ -8,6 +8,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.rff.boingballdemo.BuildConfig
 import com.rff.boingballdemo.component.OSStyle
 import java.io.IOException
 import kotlinx.coroutines.flow.Flow
@@ -36,7 +37,7 @@ class AppSettings(
             )
         }
 
-    fun getVersion() = "1.2.3"
+    fun getVersion() = BuildConfig.VERSION_NAME
 
     suspend fun saveBoingBallPrefs(value: BoingBallPrefs) {
         context.dataStore.edit { preferences ->
