@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
@@ -212,7 +213,7 @@ fun PortraitPreferencesLayout(
         )
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            text = "Application version: ${state.appVersion}",
+            text = stringResource(R.string.preferences_application_version, state.appVersion),
             style = textStyle
         )
     }
@@ -229,33 +230,35 @@ fun LandscapePreferencesLayout(
     else
         LocalTextStyle.current.copy(fontFamily = TopazFont20)
 
-    Column {
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+            .conditional(
+                condition = state.osStyle == OSStyle.AmigaOS13,
+                ifTrue = {
+                    background(color = Color.White)
+                        .padding(horizontal = 2.dp)
+                        .padding(bottom = 2.dp)
+                        .background(color = amigaOs13Blue)
+                },
+                ifFalse = {
+                    background(color = Color.White)
+                        .padding(horizontal = 1.dp)
+                        .background(color = amigaOs30Blue)
+                        .padding(horizontal = 2.dp)
+                        .background(color = blackColor)
+                        .padding(horizontal = 1.dp)
+                        .background(color = blackColor)
+                        .padding(bottom = 1.dp)
+                        .background(color = whiteColor)
+                        .padding(bottom = 1.dp)
+                        .background(color = backgroundColor)
+                }
+            )
+            .padding(16.dp)
+    ) {
         Row(
-            modifier = modifier
-                .fillMaxSize()
-                .conditional(
-                    condition = state.osStyle == OSStyle.AmigaOS13,
-                    ifTrue = {
-                        background(color = Color.White)
-                            .padding(horizontal = 2.dp)
-                            .padding(bottom = 2.dp)
-                            .background(color = amigaOs13Blue)
-                    },
-                    ifFalse = {
-                        background(color = Color.White)
-                            .padding(horizontal = 1.dp)
-                            .background(color = amigaOs30Blue)
-                            .padding(horizontal = 2.dp)
-                            .background(color = blackColor)
-                            .padding(horizontal = 1.dp)
-                            .background(color = blackColor)
-                            .padding(bottom = 1.dp)
-                            .background(color = whiteColor)
-                            .padding(bottom = 1.dp)
-                            .background(color = backgroundColor)
-                    }
-                )
-                .padding(16.dp)
+            modifier = modifier.fillMaxWidth()
         ) {
             Column(modifier = Modifier.weight(1f)) {
                 Text(
@@ -338,7 +341,7 @@ fun LandscapePreferencesLayout(
         }
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            text = "Application version: ${state.appVersion}",
+            text = stringResource(R.string.preferences_application_version, state.appVersion),
             style = textStyle
         )
     }
