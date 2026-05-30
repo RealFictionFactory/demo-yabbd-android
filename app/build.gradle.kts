@@ -64,6 +64,12 @@ android {
     }
 }
 
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
 kotlin {
     compilerOptions {
         jvmTarget = JvmTarget.fromTarget("11")
