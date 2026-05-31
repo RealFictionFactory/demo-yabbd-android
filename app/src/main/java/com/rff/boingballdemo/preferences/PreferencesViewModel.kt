@@ -2,6 +2,7 @@ package com.rff.boingballdemo.preferences
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.rff.boingballdemo.component.OSStyle
 import com.rff.boingballdemo.data.local.AppSettings
 import com.rff.boingballdemo.data.local.BoingBallPrefs
 import kotlinx.coroutines.NonCancellable
@@ -17,7 +18,9 @@ import kotlinx.coroutines.withContext
 class PreferencesViewModel(
     private val settings: AppSettings,
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(PreferencesState())
+    private val _uiState = MutableStateFlow(
+        PreferencesState(appVersion = settings.getVersion())
+    )
     val uiState: StateFlow<PreferencesState> = _uiState.asStateFlow()
 
     init {
@@ -28,6 +31,7 @@ class PreferencesViewModel(
                         themeColorIndex = prefs.themeColorIndex,
                         altColorIndex = prefs.altColorIndex,
                         drawBorders = prefs.drawBorders,
+                        osStyle = prefs.osStyle,
                     )
                 }
             }
@@ -38,12 +42,15 @@ class PreferencesViewModel(
         when (action) {
             is PreferencesAction.ChangeThemeColor -> {
                 _uiState.update { it.copy(themeColorIndex = action.index) }
+                saveCurrentSettings()
             }
             is PreferencesAction.ChangeAltColor -> {
                 _uiState.update { it.copy(altColorIndex = action.index) }
+                saveCurrentSettings()
             }
             is PreferencesAction.ChangeFrameDraw -> {
                 _uiState.update { it.copy(drawBorders = action.draw) }
+                saveCurrentSettings()
             }
             PreferencesAction.BringDefaults -> {
                 _uiState.update {
@@ -61,12 +68,19 @@ class PreferencesViewModel(
                         themeColorIndex = 1,
                         altColorIndex = 3,
                         drawBorders = true,
+                        osStyle = OSStyle.AmigaOS13,
                     )
                 }
                 saveCurrentSettings()
             }
             PreferencesAction.SaveSettings -> {
                 saveCurrentSettings()
+            }
+            PreferencesAction.SetAmigaOS13 -> {
+                setStyle(OSStyle.AmigaOS13)
+            }
+            PreferencesAction.SetAmigaOS20 -> {
+                setStyle(OSStyle.AmigaOS20)
             }
         }
     }
@@ -80,9 +94,15 @@ class PreferencesViewModel(
                         themeColorIndex = _uiState.value.themeColorIndex,
                         altColorIndex = _uiState.value.altColorIndex,
                         drawBorders = _uiState.value.drawBorders,
+                        osStyle = _uiState.value.osStyle,
                     )
                 )
             }
         }
+    }
+
+    private fun setStyle(style: OSStyle) {
+        _uiState.update { it.copy(osStyle = style) }
+        saveCurrentSettings()
     }
 }

@@ -21,7 +21,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Modifier
@@ -100,9 +99,6 @@ fun BoingBall(
         }
     }
 
-    // in my case it is unnecessary because "boing" reference does not change
-    val currentBoing by rememberUpdatedState(boing)
-
     // Consolidated animation loop to avoid duplicate angle updates
     LaunchedEffect(isResumed) {
         if (!isResumed) return@LaunchedEffect
@@ -114,7 +110,7 @@ fun BoingBall(
                 targetValue = 1f,
                 animationSpec = tween(500, easing = FastOutLinearInEasing)
             )
-            currentBoing.play()
+            boing.play()
             // rise more slowly
             vBounce.animateTo(
                 targetValue = 0f,
@@ -142,9 +138,9 @@ fun BoingBall(
         if (!isResumed) return@LaunchedEffect
 
         if (direction)
-            currentBoing.playRight()
+            boing.playRight()
         else
-            currentBoing.playLeft()
+            boing.playLeft()
     }
 
     LaunchedEffect(hBounce) {

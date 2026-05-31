@@ -1,9 +1,9 @@
 import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.util.Properties
+import org.gradle.api.GradleException
 
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.serialization)
 }
@@ -15,7 +15,17 @@ val hasKeystoreProperties = keystorePropertiesFile.exists()
 if (hasKeystoreProperties) {
     keystoreProperties.load(keystorePropertiesFile.inputStream())
 } else {
-    logger.warn("keystore.properties not found – debug builds will use the default signing config.")
+    logger.warn("keystore.properties not found.")
+}
+
+val releaseTaskRequested = gradle.startParameter.taskNames.any { taskName ->
+    "release" in taskName.lowercase()
+}
+
+if (releaseTaskRequested && !hasKeystoreProperties) {
+    throw GradleException(
+        "Release build requested without keystore.properties. Configure release signing before shipping."
+    )
 }
 
 val packageName = "com.rff.boingballdemo"
@@ -47,11 +57,14 @@ android {
     buildTypes {
         release {
             isMinifyEnabled = true
+            isShrinkResources = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            signingConfig = signingConfigs.findByName("release") ?: signingConfigs.getByName("debug")
+            if (hasKeystoreProperties) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
     compileOptions {
@@ -60,11 +73,19 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
-    kotlin {
-        compilerOptions {
-            jvmTarget = JvmTarget.fromTarget("11")
-        }
+}
+
+java {
+    toolchain {
+        languageVersion.set(JavaLanguageVersion.of(21))
+    }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = JvmTarget.fromTarget("11")
     }
 }
 

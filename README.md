@@ -13,7 +13,7 @@ This project features two core Jetpack Compose components: one responsible for r
 
 ## License
 
-    Copyright 2025 Rzeszów.NET Andrzej J. Dębicki
+    Copyright 2026 Rzeszów.NET Andrzej J. Dębicki
 
     Licensed under the Apache License, Version 2.0 (the "License");
     you may not use this file except in compliance with the License.

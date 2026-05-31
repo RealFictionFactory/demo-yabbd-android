@@ -15,14 +15,35 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.rff.boingballdemo.R
 import com.rff.boingballdemo.ui.theme.BoingBallDemoTheme
+import com.rff.boingballdemo.ui.theme.amigaOs30Grey
+import com.rff.boingballdemo.ui.theme.blackColor
 
 @Composable
-fun AmigaOs13CheckBox(
+fun AmigaCheckBox(
+    isChecked: Boolean = false,
+    osStyle: OSStyle,
+    onCheckChanged: (Boolean) -> Unit = {},
+) {
+    when (osStyle) {
+        OSStyle.AmigaOS13 -> AmigaOs13CheckBox(
+            isChecked = isChecked,
+            onCheckChanged = onCheckChanged
+        )
+        OSStyle.AmigaOS20 -> AmigaOs30CheckBox(
+            isChecked = isChecked,
+            onCheckChanged = onCheckChanged
+        )
+    }
+}
+
+@Composable
+private fun AmigaOs13CheckBox(
     isChecked: Boolean = false,
     onCheckChanged: (Boolean) -> Unit = {},
 ) {
@@ -48,6 +69,33 @@ fun AmigaOs13CheckBox(
     }
 }
 
+@Composable
+private fun AmigaOs30CheckBox(
+    isChecked: Boolean = false,
+    onCheckChanged: (Boolean) -> Unit = {},
+) {
+    Box(
+        modifier = Modifier
+            .width(30.dp)
+            .height(28.dp)
+            .amigaOs30Frame(fillColor = amigaOs30Grey)
+            .clickable(
+                onClick = {
+                    onCheckChanged(!isChecked)
+                }
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        if (isChecked) {
+            Image(
+                painter = painterResource(id = R.drawable.ic_check),
+                colorFilter = ColorFilter.tint(blackColor),
+                contentDescription = "Checked",
+            )
+        }
+    }
+}
+
 @Preview(name = "Uncontrolled CheckBox - Unchecked")
 @Composable
 private fun AmigaOs13CheckBoxPreviewUncontrolledUnchecked() {
@@ -55,6 +103,20 @@ private fun AmigaOs13CheckBoxPreviewUncontrolledUnchecked() {
         Box(modifier = Modifier.background(color = Color.Blue)) {
             var previewChecked by remember { mutableStateOf(false) }
             AmigaOs13CheckBox(
+                isChecked = previewChecked,
+                onCheckChanged = { previewChecked = it }
+            )
+        }
+    }
+}
+
+@Preview(name = "OS30 Uncontrolled CheckBox - Unchecked")
+@Composable
+private fun AmigaOs30CheckBoxPreviewUncontrolledUnchecked() {
+    BoingBallDemoTheme {
+        Box(modifier = Modifier.background(color = Color.Blue)) {
+            var previewChecked by remember { mutableStateOf(false) }
+            AmigaOs30CheckBox(
                 isChecked = previewChecked,
                 onCheckChanged = { previewChecked = it }
             )
@@ -76,6 +138,20 @@ private fun AmigaOs13CheckBoxPreviewUncontrolledChecked() {
     }
 }
 
+@Preview(name = "OS30 Uncontrolled CheckBox - Checked")
+@Composable
+private fun AmigaOs30CheckBoxPreviewUncontrolledChecked() {
+    BoingBallDemoTheme {
+        Box(modifier = Modifier.background(color = Color.Blue)) {
+            var previewChecked by remember { mutableStateOf(true) }
+            AmigaOs30CheckBox(
+                isChecked = previewChecked,
+                onCheckChanged = { previewChecked = it }
+            )
+        }
+    }
+}
+
 @Preview(name = "Controlled CheckBox")
 @Composable
 private fun ControllableAmigaOs13CheckBoxPreview() {
@@ -86,6 +162,22 @@ private fun ControllableAmigaOs13CheckBoxPreview() {
                 isChecked = isParentChecked,
                 onCheckChanged = { newCheckedState ->
                     // Parent updates its state, which flows down
+                    isParentChecked = newCheckedState
+                }
+            )
+        }
+    }
+}
+
+@Preview(name = "OS30 Controlled CheckBox")
+@Composable
+private fun ControllableAmigaOs30CheckBoxPreview() {
+    BoingBallDemoTheme {
+        var isParentChecked by remember { mutableStateOf(false) }
+        Box(modifier = Modifier.background(color = Color.Blue)) {
+            AmigaOs30CheckBox(
+                isChecked = isParentChecked,
+                onCheckChanged = { newCheckedState ->
                     isParentChecked = newCheckedState
                 }
             )
