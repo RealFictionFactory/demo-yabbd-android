@@ -91,7 +91,9 @@ fun BoingBallScreen(
                 PreferencesShortcut(
                     state = state,
                     onClick = { onAction(BoingBallAction.Preferences) },
-                    modifier = Modifier.align(Alignment.TopEnd)
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(16.dp)
                 )
             }
         } else {
@@ -103,7 +105,9 @@ fun BoingBallScreen(
                 PreferencesShortcut(
                     state = state,
                     onClick = { onAction(BoingBallAction.Preferences) },
-                    modifier = Modifier.align(Alignment.TopEnd)
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(16.dp)
                 )
                 BoingBallWindow(
                     state = state,
@@ -168,6 +172,11 @@ private fun PreferencesShortcut(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val resId = if (state.osStyle == OSStyle.AmigaOS13)
+        R.drawable.preferences
+    else
+        R.drawable.prefs30
+
     Column(
         modifier = modifier.clickable(onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -176,7 +185,7 @@ private fun PreferencesShortcut(
             modifier = Modifier
                 .width(120.dp)
                 .height(40.dp),
-            painter = painterResource(R.drawable.preferences),
+            painter = painterResource(resId),
             contentDescription = stringResource(R.string.preferences)
         )
         AmigaTextBox(
@@ -203,7 +212,7 @@ private val previewState = BoingBallState(
     osStyle = OSStyle.AmigaOS13
 )
 
-@Preview
+@Preview(device = "id:pixel_10")
 @Composable
 private fun BoingBallScreenOs13Preview() {
     BoingBallDemoTheme {
@@ -211,7 +220,7 @@ private fun BoingBallScreenOs13Preview() {
     }
 }
 
-@Preview(device = "spec:parent=pixel_5,orientation=landscape")
+@Preview(device = "spec:parent=pixel_10,orientation=landscape")
 @Composable
 private fun BoingBallScreenLandscapeOs13Preview() {
     BoingBallDemoTheme {
@@ -219,7 +228,7 @@ private fun BoingBallScreenLandscapeOs13Preview() {
     }
 }
 
-@Preview
+@Preview(device = "id:Nexus 4")
 @Composable
 private fun BoingBallScreenPreview() {
     BoingBallDemoTheme {
@@ -227,7 +236,7 @@ private fun BoingBallScreenPreview() {
     }
 }
 
-@Preview(device = "spec:parent=pixel_5,orientation=landscape")
+@Preview(device = "spec:parent=Nexus 4,orientation=landscape")
 @Composable
 private fun BoingBallScreenLandscapePreview() {
     BoingBallDemoTheme {
