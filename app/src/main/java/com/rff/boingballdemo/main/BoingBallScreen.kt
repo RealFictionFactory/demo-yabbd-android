@@ -3,10 +3,9 @@ package com.rff.boingballdemo.main
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,8 +13,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -32,7 +31,6 @@ import com.rff.boingballdemo.component.AmigaToolbar
 import com.rff.boingballdemo.component.BoingBallView
 import com.rff.boingballdemo.component.OSStyle
 import com.rff.boingballdemo.ui.theme.BoingBallDemoTheme
-import com.rff.boingballdemo.ui.theme.TopazFont
 import com.rff.boingballdemo.ui.theme.amigaOs13Blue
 import com.rff.boingballdemo.ui.theme.amigaOs30Blue
 import com.rff.boingballdemo.ui.theme.backgroundColor
@@ -69,76 +67,122 @@ fun BoingBallScreen(
     else
         amigaOs13Blue
 
-    Column(
+    BoxWithConstraints(
         modifier = Modifier
             .fillMaxSize()
             .background(color = bg)
             .windowInsetsPadding(WindowInsets.safeDrawing),
-        //contentAlignment = Alignment.Center
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-        ) {
-            AmigaToolbar(
-                title = stringResource(R.string.app_full_name),
-                osStyle = state.osStyle
-            )
-            Row(
+        val availableWidth = maxWidth
+        val isLandscape = maxWidth > maxHeight
+
+        if (isLandscape) {
+            Box(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .conditional(
-                        condition = state.osStyle == OSStyle.AmigaOS13,
-                        ifTrue = {
-                            background(color = Color.White)
-                            .padding(horizontal = 2.dp)
-                            .padding(bottom = 2.dp)
-                        },
-                        ifFalse = {
-                            background(color = Color.White)
-                                .padding(horizontal = 1.dp)
-                                .background(color = amigaOs30Blue)
-                                .padding(horizontal = 2.dp)
-                                .background(color = blackColor)
-                                .padding(horizontal = 1.dp)
-                                .background(color = blackColor)
-                                .padding(bottom = 1.dp)
-                                .background(color = whiteColor)
-                                .padding(bottom = 1.dp)
-                        }
-                    )
-                    .background(color = backgroundColor),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
+                    .fillMaxSize()
+                    .padding(16.dp),
             ) {
-                BoingBallView(
-                    modifier = Modifier.padding(16.dp),
-                    themeColor = state.themeColor,
-                    altColor = state.altColor,
-                    drawBorders = state.drawBorders,
+                BoingBallWindow(
+                    state = state,
+                    modifier = Modifier
+                        .align(Alignment.TopStart)
+                        .widthIn(max = availableWidth * 0.72f)
+                )
+                PreferencesShortcut(
+                    state = state,
+                    onClick = { onAction(BoingBallAction.Preferences) },
+                    modifier = Modifier.align(Alignment.TopEnd)
+                )
+            }
+        } else {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp)
+            ) {
+                PreferencesShortcut(
+                    state = state,
+                    onClick = { onAction(BoingBallAction.Preferences) },
+                    modifier = Modifier.align(Alignment.TopEnd)
+                )
+                BoingBallWindow(
+                    state = state,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .widthIn(max = availableWidth)
                 )
             }
         }
-        Column(
+    }
+}
+
+@Composable
+private fun BoingBallWindow(
+    state: BoingBallState,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+        AmigaToolbar(
+            title = stringResource(R.string.app_name),
+            osStyle = state.osStyle
+        )
+        Box(
             modifier = Modifier
-                //.align(Alignment.TopEnd)
-                .padding(top = 40.dp, end = 40.dp)
-                .clickable { onAction(BoingBallAction.Preferences) },
-            horizontalAlignment = Alignment.CenterHorizontally,
+                .fillMaxWidth()
+                .conditional(
+                    condition = state.osStyle == OSStyle.AmigaOS13,
+                    ifTrue = {
+                        background(color = Color.White)
+                            .padding(horizontal = 2.dp)
+                            .padding(bottom = 2.dp)
+                    },
+                    ifFalse = {
+                        background(color = Color.White)
+                            .padding(horizontal = 1.dp)
+                            .background(color = amigaOs30Blue)
+                            .padding(horizontal = 2.dp)
+                            .background(color = blackColor)
+                            .padding(horizontal = 1.dp)
+                            .background(color = blackColor)
+                            .padding(bottom = 1.dp)
+                            .background(color = whiteColor)
+                            .padding(bottom = 1.dp)
+                    }
+                )
+                .background(color = backgroundColor),
+            contentAlignment = Alignment.Center
         ) {
-            Image(
-                modifier = Modifier
-                    .width(120.dp)
-                    .height(40.dp),
-                painter = painterResource(R.drawable.preferences),
-                contentDescription = stringResource(R.string.preferences)
-            )
-            AmigaTextBox(
-                text = stringResource(R.string.preferences),
-                osStyle = state.osStyle
+            BoingBallView(
+                modifier = Modifier.padding(16.dp),
+                themeColor = state.themeColor,
+                altColor = state.altColor,
+                drawBorders = state.drawBorders,
             )
         }
+    }
+}
+
+@Composable
+private fun PreferencesShortcut(
+    state: BoingBallState,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier = modifier.clickable(onClick = onClick),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Image(
+            modifier = Modifier
+                .width(120.dp)
+                .height(40.dp),
+            painter = painterResource(R.drawable.preferences),
+            contentDescription = stringResource(R.string.preferences)
+        )
+        AmigaTextBox(
+            text = stringResource(R.string.preferences),
+            osStyle = state.osStyle
+        )
     }
 }
 
