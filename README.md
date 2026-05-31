@@ -1,3 +1,6 @@
+> **⚠️ This repository is no longer maintained.**
+> All future development has moved to the multiplatform project at **[demo-boingball-kmp](https://github.com/RealFictionFactory/demo-boingball-kmp)**.
+
 # YABBD
 
 ## Yet Another Boing Ball Demo
