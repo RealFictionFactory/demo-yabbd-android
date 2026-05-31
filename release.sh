@@ -1,7 +1,9 @@
 #!/bin/bash
 
+set -euo pipefail
+
 # Build signed release APK and AAB
-# Assumes signing is already configured in app/build.gradle
+# Assumes signing is already configured via keystore.properties
 
 echo "Building release App Bundle and APK..."
 ./gradlew assembleRelease bundleRelease

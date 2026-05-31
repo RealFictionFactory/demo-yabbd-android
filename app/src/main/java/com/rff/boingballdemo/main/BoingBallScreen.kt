@@ -27,11 +27,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rff.boingballdemo.R
+import com.rff.boingballdemo.component.AmigaTextBox
 import com.rff.boingballdemo.component.AmigaToolbar
 import com.rff.boingballdemo.component.BoingBallView
 import com.rff.boingballdemo.component.OSStyle
 import com.rff.boingballdemo.ui.theme.BoingBallDemoTheme
 import com.rff.boingballdemo.ui.theme.TopazFont
+import com.rff.boingballdemo.ui.theme.amigaOs13Blue
 import com.rff.boingballdemo.ui.theme.amigaOs30Blue
 import com.rff.boingballdemo.ui.theme.backgroundColor
 import com.rff.boingballdemo.ui.theme.blackColor
@@ -62,12 +64,17 @@ fun BoingBallScreen(
     state: BoingBallState,
     onAction: (BoingBallAction) -> Unit = {},
 ) {
-    Box(
+    val bg = if (state.osStyle == OSStyle.AmigaOS20)
+        backgroundColor
+    else
+        amigaOs13Blue
+
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = backgroundColor)
+            .background(color = bg)
             .windowInsetsPadding(WindowInsets.safeDrawing),
-        contentAlignment = Alignment.Center
+        //contentAlignment = Alignment.Center
     ) {
         Column(
             modifier = Modifier
@@ -115,7 +122,7 @@ fun BoingBallScreen(
         }
         Column(
             modifier = Modifier
-                .align(Alignment.TopEnd)
+                //.align(Alignment.TopEnd)
                 .padding(top = 40.dp, end = 40.dp)
                 .clickable { onAction(BoingBallAction.Preferences) },
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -127,9 +134,9 @@ fun BoingBallScreen(
                 painter = painterResource(R.drawable.preferences),
                 contentDescription = stringResource(R.string.preferences)
             )
-            Text(
+            AmigaTextBox(
                 text = stringResource(R.string.preferences),
-                fontFamily = TopazFont
+                osStyle = state.osStyle
             )
         }
     }
@@ -154,7 +161,7 @@ private val previewState = BoingBallState(
 
 @Preview
 @Composable
-private fun BoingBallScreenPreview() {
+private fun BoingBallScreenOs13Preview() {
     BoingBallDemoTheme {
         BoingBallScreen(previewState)
     }
@@ -162,8 +169,24 @@ private fun BoingBallScreenPreview() {
 
 @Preview(device = "spec:parent=pixel_5,orientation=landscape")
 @Composable
-private fun BoingBallScreenLandscapePreview() {
+private fun BoingBallScreenLandscapeOs13Preview() {
     BoingBallDemoTheme {
         BoingBallScreen(previewState)
+    }
+}
+
+@Preview
+@Composable
+private fun BoingBallScreenPreview() {
+    BoingBallDemoTheme {
+        BoingBallScreen(previewState.copy(osStyle = OSStyle.AmigaOS20))
+    }
+}
+
+@Preview(device = "spec:parent=pixel_5,orientation=landscape")
+@Composable
+private fun BoingBallScreenLandscapePreview() {
+    BoingBallDemoTheme {
+        BoingBallScreen(previewState.copy(osStyle = OSStyle.AmigaOS20))
     }
 }

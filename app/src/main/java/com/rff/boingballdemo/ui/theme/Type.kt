@@ -21,7 +21,7 @@ val Toolbar30TextStyle = TextStyle(
     fontFamily = TopazFont20,
     fontWeight = FontWeight.Normal,
     fontSize = 16.sp,
-    color = whiteColor,
+    color = blackColor,
     lineHeight = 24.sp,
     letterSpacing = 0.5.sp
 )

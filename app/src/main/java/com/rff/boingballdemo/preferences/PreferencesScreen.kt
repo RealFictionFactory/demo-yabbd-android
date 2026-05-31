@@ -28,6 +28,7 @@ import com.rff.boingballdemo.R
 import com.rff.boingballdemo.component.AmigaButton
 import com.rff.boingballdemo.component.AmigaCheckBox
 import com.rff.boingballdemo.component.AmigaColorPicker
+import com.rff.boingballdemo.component.AmigaTextBox
 import com.rff.boingballdemo.component.AmigaToolbar
 import com.rff.boingballdemo.component.OSStyle
 import com.rff.boingballdemo.main.conditional
@@ -105,11 +106,6 @@ fun PortraitPreferencesLayout(
     onAction: (PreferencesAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val textStyle = if (state.osStyle == OSStyle.AmigaOS13)
-        LocalTextStyle.current.copy(fontFamily = TopazFont)
-    else
-        LocalTextStyle.current.copy(fontFamily = TopazFont20)
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -137,9 +133,9 @@ fun PortraitPreferencesLayout(
             )
             .padding(16.dp)
     ) {
-        Text(
+        AmigaTextBox(
             text = stringResource(R.string.preferences_pick_main_bb_color),
-            style = textStyle
+            osStyle = state.osStyle
         )
         AmigaColorPicker(
             selectedIndex = state.themeColorIndex,
@@ -149,9 +145,9 @@ fun PortraitPreferencesLayout(
             }
         )
         Spacer(modifier = Modifier.height(8.dp))
-        Text(
+        AmigaTextBox(
             text = stringResource(R.string.preferences_pick_alternate_bb_color),
-            style = textStyle
+            osStyle = state.osStyle
         )
         AmigaColorPicker(
             selectedIndex = state.altColorIndex,
@@ -166,9 +162,9 @@ fun PortraitPreferencesLayout(
             modifier = Modifier.padding(vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(
+            AmigaTextBox(
                 text = stringResource(R.string.preferences_draw_bb_square_borders),
-                style = textStyle
+                osStyle = state.osStyle
             )
             Spacer(modifier = Modifier.width(8.dp))
             AmigaCheckBox(
@@ -212,9 +208,9 @@ fun PortraitPreferencesLayout(
             onClick = { onAction(PreferencesAction.SaveSettings) }
         )
         Spacer(modifier = Modifier.weight(1f))
-        Text(
+        AmigaTextBox(
             text = stringResource(R.string.preferences_application_version, state.appVersion),
-            style = textStyle
+            osStyle = state.osStyle
         )
     }
 }
@@ -225,11 +221,6 @@ fun LandscapePreferencesLayout(
     onAction: (PreferencesAction) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val textStyle = if (state.osStyle == OSStyle.AmigaOS13)
-        LocalTextStyle.current.copy(fontFamily = TopazFont)
-    else
-        LocalTextStyle.current.copy(fontFamily = TopazFont20)
-
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -261,9 +252,9 @@ fun LandscapePreferencesLayout(
             modifier = modifier.fillMaxWidth()
         ) {
             Column(modifier = Modifier.weight(1f)) {
-                Text(
+                AmigaTextBox(
                     text = stringResource(R.string.preferences_pick_main_bb_color),
-                    style = textStyle
+                    osStyle = state.osStyle
                 )
                 AmigaColorPicker(
                     selectedIndex = state.themeColorIndex,
@@ -273,9 +264,9 @@ fun LandscapePreferencesLayout(
                     }
                 )
                 Spacer(modifier = Modifier.height(8.dp))
-                Text(
+                AmigaTextBox(
                     text = stringResource(R.string.preferences_pick_alternate_bb_color),
-                    style = textStyle
+                    osStyle = state.osStyle
                 )
                 AmigaColorPicker(
                     selectedIndex = state.altColorIndex,
@@ -290,9 +281,9 @@ fun LandscapePreferencesLayout(
                     modifier = Modifier.padding(vertical = 8.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
+                    AmigaTextBox(
                         text = stringResource(R.string.preferences_draw_bb_square_borders),
-                        style = textStyle
+                        osStyle = state.osStyle
                     )
                     Spacer(modifier = Modifier.width(8.dp))
                     AmigaCheckBox(
@@ -340,9 +331,9 @@ fun LandscapePreferencesLayout(
             }
         }
         Spacer(modifier = Modifier.weight(1f))
-        Text(
+        AmigaTextBox(
             text = stringResource(R.string.preferences_application_version, state.appVersion),
-            style = textStyle
+            osStyle = state.osStyle
         )
     }
 }
@@ -353,7 +344,29 @@ private val previewState = PreferencesState(
 
 @Preview
 @Composable
-private fun PreferencesScreenPortraitPreview() {
+private fun PreferencesScreenPortraitOs13Preview() {
+    BoingBallDemoTheme {
+        PreferencesScreen(
+            state = previewState.copy(osStyle = OSStyle.AmigaOS13),
+            onAction = {}
+        )
+    }
+}
+
+@Preview(device = "spec:parent=Nexus 5,orientation=landscape")
+@Composable
+private fun PreferencesScreenLandscapeOs13Preview() {
+    BoingBallDemoTheme {
+        PreferencesScreen(
+            state = previewState.copy(osStyle = OSStyle.AmigaOS13),
+            onAction = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun PreferencesScreenPortraitOs30Preview() {
     BoingBallDemoTheme {
         PreferencesScreen(
             state = previewState,
@@ -364,7 +377,7 @@ private fun PreferencesScreenPortraitPreview() {
 
 @Preview(device = "spec:parent=Nexus 5,orientation=landscape")
 @Composable
-private fun PreferencesScreenLandscapePreview() {
+private fun PreferencesScreenLandscapeOs30Preview() {
     BoingBallDemoTheme {
         PreferencesScreen(
             state = previewState,
